@@ -26,17 +26,12 @@ jobs:
       - name: Decompile
         shell: pwsh
         run: |
-          ilspycmd -o decompiled compile.exe 2>&1 | Select-Object -Last 20
-          Get-ChildItem decompiled -Recurse -File | Measure-Object | Select-Object Count
+          ilspycmd -o decompiled compile.exe 2>&1 | Select-Object -Last 5
 
-      - name: Show compression logic
-        shell: pwsh
-        run: |
-          $hits = Select-String -Path (Get-ChildItem decompiled -Recurse -Filter *.cs).FullName -Pattern "Compression failed for imageList" -List
-          foreach ($hit in $hits) {
-            Write-Host "FILE: $($hit.Path)"
-            $lines = Get-Content $hit.Path
-            $start = [Math]::Max(0, $hit.LineNumber - 80)
-            $end = [Math]::Min($lines.Count - 1, $hit.LineNumber + 60)
-            $lines[$start..$end]
-          }
+      - name: Upload decompiled source
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: decompiled
+          path: decompiled/
+          if-no-files-found: error
+          retention-days: 1
