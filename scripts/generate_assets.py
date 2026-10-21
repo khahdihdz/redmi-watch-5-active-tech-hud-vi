@@ -280,6 +280,12 @@ def build_digits() -> dict[str, list[Path]]:
             path = SRC_IMAGES / f"{prefix}_{digit}.png"
             save_png(image, path)
             paths.append(path)
+        # Index 10 is the minus sign: compile.exe/Mi Create numbers widgets index
+        # the 11th bitmap when the formatted value is negative (e.g. temperature).
+        minus = render_glyph("-", size, family, font_size, fill, glow_colour=glow, weight=weight, padding=padding)
+        path = SRC_IMAGES / f"{prefix}_minus.png"
+        save_png(minus, path)
+        paths.append(path)
         created[prefix] = paths
     return created
 
@@ -370,7 +376,7 @@ def widget_images(widget: dict) -> list[str]:
     if widget["kind"] == "imagelist":
         return widget["images"]
     prefix = widget["image"]
-    return [f"{prefix}_{i}" for i in range(10)]
+    return [f"{prefix}_{i}" for i in range(10)] + [f"{prefix}_minus"]
 
 
 def compose_widget(canvas: Image.Image, widget: dict, sample: dict, assets: dict[str, Image.Image]) -> None:
@@ -449,11 +455,9 @@ def build_fprj() -> str:
             attrs.append(f'Index_Src="{widget["source"]}"')
             attrs.append(f'DefaultIndex="{widget.get("default", 0)}"')
             names = [f'{name}.png' for name in widget["images"]]
-            if "thresholds" in widget:
-                parts = [f"({threshold}):{name}" for threshold, name in zip(widget["thresholds"], names)]
-                attrs.append(f'BitmapList="{"|".join(parts)}"')
-            else:
-                attrs.append(f'BitmapList="{"|".join(names)}"')
+            thresholds = widget.get("thresholds") or list(range(len(names)))
+            parts = [f"({threshold}):{name}" for threshold, name in zip(thresholds, names)]
+            attrs.append(f'BitmapList="{"|".join(parts)}"')
         else:
             attrs.append('Shape="32"')
             attrs.append(f'Digits="{widget["digits"]}"')
@@ -462,6 +466,7 @@ def build_fprj() -> str:
             attrs.append(f'Blanking="{widget.get("blanking", 1)}"')
             attrs.append(f'Value_Src="{widget["source"]}"')
             names = [f'{widget["image"]}_{i}.png' for i in range(10)]
+            names.append(f'{widget["image"]}_minus.png')
             attrs.append(f'BitmapList="{"|".join(names)}"')
         lines.append("    <Widget " + " ".join(attrs) + " />")
     lines += ["  </Screen>", "</FaceProject>", ""]

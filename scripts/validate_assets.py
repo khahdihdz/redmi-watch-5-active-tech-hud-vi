@@ -125,6 +125,7 @@ def main() -> int:
     }.items():
         for digit in range(10):
             expected[f"{prefix}_{digit}"] = size
+        expected[f"{prefix}_minus"] = size
     for index in range(7):
         expected[f"weekday_{index}"] = (34, 20)
     for index in range(2):
@@ -185,15 +186,27 @@ def main() -> int:
                     check(widget.get("Index_Src") in {str(x["source"]) for x in layout["widgets"]}, f"widget {name} unknown source")
                     parts = (widget.get("BitmapList") or "").split("|")
                     check(len(parts) >= 2, f"widget {name} bitmap list too short")
+                    previous = None
                     for part in parts:
-                        filename = part.split(":", 1)[-1]
+                        check(":" in part, f"widget {name} bitmap entry missing index: {part}")
+                        prefix, filename = part.split(":", 1)
+                        check(prefix.startswith("(") and prefix.endswith(")"), f"widget {name} bad index prefix: {prefix}")
+                        try:
+                            value = int(prefix[1:-1])
+                        except ValueError:
+                            errors.append(f"widget {name} non-integer index: {prefix}")
+                            continue
+                        if previous is not None:
+                            check(value > previous, f"widget {name} bitmap indexes not ascending")
+                        previous = value
                         check((SRC_IMAGES / filename).is_file(), f"widget {name} image missing: {filename}")
                 elif shape == "32":
                     digits = int(widget.get("Digits", "0"))
                     spacing = int(widget.get("Spacing", "0"))
                     check(widget.get("Value_Src") in {str(x["source"]) for x in layout["widgets"]}, f"widget {name} unknown source")
                     parts = (widget.get("BitmapList") or "").split("|")
-                    check(len(parts) == 10, f"widget {name} must have 10 digit images")
+                    check(len(parts) == 11, f"widget {name} must have 10 digit images plus a minus image")
+                    check(parts[-1].endswith("_minus.png"), f"widget {name} 11th bitmap is not a minus image")
                     first = SRC_IMAGES / parts[0]
                     if first.is_file():
                         cell = Image.open(first).width
