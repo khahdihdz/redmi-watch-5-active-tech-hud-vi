@@ -1,0 +1,42 @@
+name: debug-decompile
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  decompile:
+    runs-on: windows-2022
+    steps:
+      - name: Download pinned compiler
+        shell: pwsh
+        run: |
+          $url = "https://raw.githubusercontent.com/ooflet/Mi-Create/586a917dec69626447254adc965daabb97fb30dc/src/compiler/compile.exe"
+          Invoke-WebRequest -Uri $url -OutFile compile.exe -UseBasicParsing
+          (Get-FileHash compile.exe -Algorithm SHA256).Hash
+
+      - name: Install ILSpy
+        shell: pwsh
+        run: |
+          dotnet tool install --global ilspycmd
+          "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
+
+      - name: Decompile
+        shell: pwsh
+        run: |
+          ilspycmd -o decompiled compile.exe 2>&1 | Select-Object -Last 20
+          Get-ChildItem decompiled -Recurse -File | Measure-Object | Select-Object Count
+
+      - name: Show compression logic
+        shell: pwsh
+        run: |
+          $hits = Select-String -Path (Get-ChildItem decompiled -Recurse -Filter *.cs).FullName -Pattern "Compression failed for imageList" -List
+          foreach ($hit in $hits) {
+            Write-Host "FILE: $($hit.Path)"
+            $lines = Get-Content $hit.Path
+            $start = [Math]::Max(0, $hit.LineNumber - 80)
+            $end = [Math]::Min($lines.Count - 1, $hit.LineNumber + 60)
+            $lines[$start..$end]
+          }
