@@ -3,6 +3,15 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from common import parse_number  # noqa: E402
+
+
+def test_zero_value_keeps_one_digit():
+    assert parse_number(0, 6) == [None, None, None, None, None, "0"]
+    assert parse_number(0, 1) == ["0"]
+    assert parse_number(8642, 6) == [None, None, "8", "6", "4", "2"]
 
 
 def run(script: str) -> subprocess.CompletedProcess:

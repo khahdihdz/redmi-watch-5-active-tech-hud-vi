@@ -12,7 +12,7 @@ on:
         type: boolean
         default: false
       version:
-        description: "Tag phiên bản đã tồn tại (bắt buộc khi release=true), ví dụ v1.0.0"
+        description: "Tag phiên bản đã tồn tại (bắt buộc khi release=true), ví dụ v1.0.1"
         type: string
         required: false
         default: ""
@@ -55,7 +55,7 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
           else
-            echo "VERSION=v1.0.0-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+            echo "VERSION=v1.0.1-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
           fi
 
       - name: Install pinned dependencies

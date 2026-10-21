@@ -102,10 +102,11 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 ## Thay đổi
 
 - Giao diện Tech HUD tiếng Việt có dấu, tối ưu màn hình 320×385.
-- Đồng hồ số cỡ lớn, độ tương phản cao; nhãn tiếng Việt được rasterize để không phụ thuộc font hệ thống.
-- Bốn panel dữ liệu: BƯỚC, TIM, CALO, NHIỆT ĐỘ.
-- Vòng MỤC TIÊU 21 mức (5% mỗi mức) lấy từ phần trăm mục tiêu bước chân.
-- Panel TRẠNG THÁI phản ánh kết nối Bluetooth thực tế.
+- Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL và chấm trạng thái trùng.
+- Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
+- Bốn panel dữ liệu: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.
+- Vòng MỤC TIÊU 21 mức (5% mỗi mức) lấy từ phần trăm mục tiêu bước chân; nhãn không còn bị vạch trang trí đè.
+- Panel TRẠNG THÁI hiển thị **ĐÃ KẾT NỐI** / **MẤT KẾT NỐI** từ Bluetooth thực tế.
 - Build tự động, kiểm tra cấu trúc nhị phân, checksum SHA-256 và GitHub Actions.
 
 ## Ảnh xem trước

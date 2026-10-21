@@ -2,7 +2,7 @@
   "meta": {
     "name": "Tech HUD VI",
     "title": "Tech HUD VI",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "device": "Redmi Watch 5 Active",
     "device_type": "3651",
     "canvas": {
@@ -12,6 +12,19 @@
     "safe_inset": 8,
     "preview_note": "ẢNH XEM TRƯỚC · SỐ LIỆU MINH HỌA",
     "verification_note": "Chưa kiểm thử trên thiết bị thật tại thời điểm phát hành.",
+    "weekdays": [
+      "CHỦ NHẬT",
+      "THỨ HAI",
+      "THỨ BA",
+      "THỨ TƯ",
+      "THỨ NĂM",
+      "THỨ SÁU",
+      "THỨ BẢY"
+    ],
+    "connection_labels": [
+      "MẤT KẾT NỐI",
+      "ĐÃ KẾT NỐI"
+    ],
     "colors": {
       "bg": "#000000",
       "cyan": "#00D9FF",
@@ -52,24 +65,14 @@
   "labels": [
     {
       "id": "brand",
-      "text": "TECH HUD // VN",
-      "x": 26,
+      "text": "TECH HUD",
+      "x": 14,
       "y": 8,
       "font": "label",
       "size": 9,
       "color": "cyan",
-      "tracking": 1.4,
-      "max_width": 120
-    },
-    {
-      "id": "pin_label",
-      "text": "PIN",
-      "x": 214,
-      "y": 9,
-      "font": "label",
-      "size": 8,
-      "color": "muted",
-      "max_width": 22
+      "tracking": 1.2,
+      "max_width": 100
     },
     {
       "id": "battery_pct",
@@ -82,40 +85,20 @@
       "max_width": 14
     },
     {
-      "id": "thu",
-      "text": "THỨ",
-      "x": 14,
+      "id": "date_sep",
+      "text": "/",
+      "x": 270,
       "y": 26,
-      "font": "label",
-      "size": 13,
-      "color": "text",
-      "max_width": 32
-    },
-    {
-      "id": "date_dot",
-      "text": "·",
-      "x": 88,
-      "y": 24,
       "font": "label",
       "size": 14,
       "color": "muted",
       "max_width": 8
     },
     {
-      "id": "thang",
-      "text": "THÁNG",
-      "x": 122,
-      "y": 26,
-      "font": "label",
-      "size": 13,
-      "color": "text",
-      "max_width": 56
-    },
-    {
       "id": "step_label",
       "text": "BƯỚC",
       "x": 34,
-      "y": 163,
+      "y": 162,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -126,7 +109,7 @@
       "id": "heart_label",
       "text": "TIM",
       "x": 188,
-      "y": 163,
+      "y": 162,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -134,21 +117,10 @@
       "max_width": 40
     },
     {
-      "id": "heart_unit",
-      "text": "BPM",
-      "x": 300,
-      "y": 164,
-      "font": "label_medium",
-      "size": 7,
-      "color": "muted",
-      "anchor": "ra",
-      "max_width": 28
-    },
-    {
       "id": "calo_label",
       "text": "CALO",
       "x": 34,
-      "y": 215,
+      "y": 214,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -156,21 +128,10 @@
       "max_width": 60
     },
     {
-      "id": "calo_unit",
-      "text": "KCAL",
-      "x": 146,
-      "y": 216,
-      "font": "label_medium",
-      "size": 7,
-      "color": "muted",
-      "anchor": "ra",
-      "max_width": 32
-    },
-    {
       "id": "temp_label",
       "text": "NHIỆT ĐỘ",
       "x": 188,
-      "y": 215,
+      "y": 214,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -180,13 +141,12 @@
     {
       "id": "temp_unit",
       "text": "°C",
-      "x": 300,
-      "y": 216,
+      "x": 292,
+      "y": 228,
       "font": "label_medium",
-      "size": 7,
+      "size": 8,
       "color": "muted",
-      "anchor": "ra",
-      "max_width": 20
+      "max_width": 16
     },
     {
       "id": "goal_label",
@@ -196,52 +156,20 @@
       "font": "label",
       "size": 8,
       "color": "muted",
-      "tracking": 1.0,
+      "tracking": 0.8,
       "anchor": "ma",
       "max_width": 86
-    },
-    {
-      "id": "goal_unit",
-      "text": "%",
-      "x": 81,
-      "y": 307,
-      "font": "label",
-      "size": 8,
-      "color": "cyan",
-      "max_width": 12
     },
     {
       "id": "status_label",
       "text": "TRẠNG THÁI",
       "x": 130,
-      "y": 270,
+      "y": 278,
       "font": "label",
       "size": 9,
       "color": "muted",
       "tracking": 1.2,
       "max_width": 100
-    },
-    {
-      "id": "core",
-      "text": "HUD-CORE // 1.0.0",
-      "x": 130,
-      "y": 326,
-      "font": "label_medium",
-      "size": 7,
-      "color": "muted",
-      "max_width": 140
-    },
-    {
-      "id": "footer",
-      "text": "REDMI WATCH 5 ACTIVE · TECH HUD VI",
-      "x": 160,
-      "y": 371,
-      "font": "label_medium",
-      "size": 7,
-      "color": "muted",
-      "anchor": "ma",
-      "tracking": 0.4,
-      "max_width": 290
     }
   ],
   "panels": [
@@ -335,27 +263,12 @@
   ],
   "widgets": [
     {
-      "id": "status_dot",
-      "kind": "imagelist",
-      "x": 12,
-      "y": 11,
-      "w": 8,
-      "h": 29,
-      "source": "2041",
-      "default": 0,
-      "images": [
-        "dot_0",
-        "dot_1"
-      ],
-      "preview": 1
-    },
-    {
       "id": "weekday",
       "kind": "imagelist",
-      "x": 46,
-      "y": 24,
-      "w": 34,
-      "h": 20,
+      "x": 14,
+      "y": 21,
+      "w": 110,
+      "h": 26,
       "source": "2012",
       "default": 0,
       "images": [
@@ -372,7 +285,7 @@
     {
       "id": "day",
       "kind": "dignum",
-      "x": 96,
+      "x": 246,
       "y": 24,
       "w": 20,
       "h": 24,
@@ -387,7 +300,7 @@
     {
       "id": "month",
       "kind": "dignum",
-      "x": 182,
+      "x": 280,
       "y": 24,
       "w": 20,
       "h": 24,
@@ -477,12 +390,12 @@
     {
       "id": "steps",
       "kind": "dignum",
-      "x": 76,
-      "y": 176,
-      "w": 70,
+      "x": 62,
+      "y": 174,
+      "w": 84,
       "h": 24,
       "source": "0821",
-      "digits": 5,
+      "digits": 6,
       "spacing": 0,
       "blanking": 1,
       "align": 0,
@@ -493,7 +406,7 @@
       "id": "heart",
       "kind": "dignum",
       "x": 258,
-      "y": 176,
+      "y": 174,
       "w": 42,
       "h": 24,
       "source": "0822",
@@ -508,11 +421,11 @@
       "id": "calories",
       "kind": "dignum",
       "x": 76,
-      "y": 228,
-      "w": 56,
+      "y": 226,
+      "w": 70,
       "h": 24,
       "source": "0823",
-      "digits": 4,
+      "digits": 5,
       "spacing": 0,
       "blanking": 1,
       "align": 0,
@@ -522,12 +435,12 @@
     {
       "id": "temp",
       "kind": "dignum",
-      "x": 258,
-      "y": 228,
-      "w": 28,
+      "x": 248,
+      "y": 226,
+      "w": 42,
       "h": 24,
       "source": "2031",
-      "digits": 2,
+      "digits": 3,
       "spacing": 0,
       "blanking": 1,
       "align": 0,
@@ -594,7 +507,7 @@
     {
       "id": "goal_value",
       "kind": "dignum",
-      "x": 44,
+      "x": 38,
       "y": 303,
       "w": 36,
       "h": 20,
@@ -610,7 +523,7 @@
       "id": "status",
       "kind": "imagelist",
       "x": 128,
-      "y": 285,
+      "y": 302,
       "w": 168,
       "h": 26,
       "source": "2041",

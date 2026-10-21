@@ -162,10 +162,10 @@ def build_background() -> Image.Image:
         ex, ey = trace[-1]
         draw.ellipse([sc(ex - 1.5), sc(ey - 1.5), sc(ex + 1.5), sc(ey + 1.5)], outline=cyan + (65,), width=sc(1))
 
-    # top / bottom rules
+    # top rule (the bottom rule is intentionally omitted: the goal label sits
+    # below the ring and must not share the same scanline as a decoration)
     draw.line([(sc(10), sc(48)), (sc(W - 10), sc(48))], fill=blue + (85,), width=sc(1))
     draw.line([(sc(10), sc(48)), (sc(64), sc(48))], fill=orange + (200,), width=sc(1))
-    draw.line([(sc(10), sc(358)), (sc(W - 10), sc(358))], fill=blue + (55,), width=sc(1))
 
     # corner brackets
     inset, arm = META["safe_inset"], 22
@@ -216,15 +216,9 @@ def build_background() -> Image.Image:
         colour = rgba(LAYOUT, label["color"])
         draw_text(draw, (label["x"], label["y"]), label["text"], font, colour, label.get("tracking", 0.0), label.get("anchor", "la"))
 
-    # ring ticks around the progress dial
-    cx, cy, radius = 62, 306, 47
-    for deg in range(0, 360, 6):
-        t = math.radians(deg)
-        length = 2.5 if deg % 30 else 3.5
-        x1, y1 = cx + math.cos(t) * radius, cy + math.sin(t) * radius
-        x2, y2 = cx + math.cos(t) * (radius + length), cy + math.sin(t) * (radius + length)
-        col = cyan + (110,) if deg % 30 else orange + (170,)
-        draw.line([(sc(x1), sc(y1)), (sc(x2), sc(y2))], fill=col, width=sc(1))
+    # The old circular tick ruler sat 6 px below the dial (cy 306 instead of
+    # 300) and its lower ticks crossed the "MỤC TIÊU" label. The dial bitmaps
+    # already provide the scale, so the extra ruler is removed.
 
     final = Image.new("RGBA", CANVAS, (0, 0, 0, 255))
     final.alpha_composite(downsample(image, CANVAS))
@@ -301,22 +295,22 @@ def fit_font(family: str, text: str, size: int, max_width: float, tracking: floa
 
 
 def build_weekdays() -> list[Path]:
-    names = ["CN", "HAI", "BA", "TƯ", "NĂM", "SÁU", "BẢY"]
+    """Render the full Vietnamese weekday name, not a truncated abbreviation."""
     paths = []
-    for index, name in enumerate(names):
-        layer, draw = new_layer(34, 20)
-        font = fit_font("label", name, 13, 31, 0.2)
-        draw_text(draw, (17, 2), name, font, rgba(LAYOUT, "text"), 0.2, "ma")
+    for index, name in enumerate(META["weekdays"]):
+        layer, draw = new_layer(110, 26)
+        font = fit_font("label", name, 18, 106, 0.2)
+        draw_text(draw, (2, 1), name, font, rgba(LAYOUT, "text"), 0.2, "la")
         path = SRC_IMAGES / f"weekday_{index}.png"
-        save_png(downsample(layer, (34, 20)), path)
+        save_png(downsample(layer, (110, 26)), path)
         paths.append(path)
     return paths
 
 
 def build_connection() -> list[Path]:
     variants = [
-        ("NGOẠI TUYẾN", "red"),
-        ("SẴN SÀNG", "green"),
+        (META["connection_labels"][0], "red"),
+        (META["connection_labels"][1], "green"),
     ]
     paths = []
     for index, (text, colour) in enumerate(variants):
@@ -327,18 +321,6 @@ def build_connection() -> list[Path]:
         draw_text(draw, (12, 3), text, font, rgb + (255,), 1.2)
         path = SRC_IMAGES / f"conn_{index}.png"
         save_png(downsample(layer, (168, 26)), path)
-        paths.append(path)
-    return paths
-
-
-def build_dots() -> list[Path]:
-    paths = []
-    for index, colour in enumerate(("red", "green")):
-        layer, draw = new_layer(8, 8)
-        rgb = hex_rgb(COLORS[colour])
-        draw.ellipse([sc(1.5), sc(1.5), sc(6.5), sc(6.5)], fill=rgb + (255,))
-        path = SRC_IMAGES / f"dot_{index}.png"
-        save_png(downsample(layer, (8, 8)), path)
         paths.append(path)
     return paths
 
@@ -476,6 +458,10 @@ def build_fprj() -> str:
 def main() -> int:
     SRC_IMAGES.mkdir(parents=True, exist_ok=True)
     (ROOT / "assets" / "backgrounds").mkdir(parents=True, exist_ok=True)
+    # Remove obsolete bitmaps (for example the retired status dot) so the
+    # directory always matches the current layout.
+    for stale in SRC_IMAGES.glob("*.png"):
+        stale.unlink()
 
     background = build_background()
     save_png(background, BACKGROUND_PATH)
@@ -484,7 +470,6 @@ def main() -> int:
     build_digits()
     build_weekdays()
     build_connection()
-    build_dots()
     build_rings()
 
     assets: dict[str, Image.Image] = {}

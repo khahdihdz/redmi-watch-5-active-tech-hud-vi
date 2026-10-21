@@ -14,6 +14,7 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 
 - Đồng hồ số `HH:MM` cỡ lớn, độ tương phản cao, có glow cyan tiết chế.
 - Khung HUD góc vát, đường mạch điện tử, panel thông số và vòng tiến độ.
+- Bố cục tối giản: chỉ giữ dữ liệu cần thiết, không footer tên máy, không mã phiên bản, không nhãn đơn vị lặp.
 - Toàn bộ nhãn tiếng Việt được **rasterize thành bitmap** bằng font Be Vietnam Pro, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
 - Dữ liệu động lấy từ các source đã được tài liệu hoá cho đúng mẫu máy.
 - Build, kiểm tra, đóng gói và phát hành tự động bằng GitHub Actions.
@@ -57,8 +58,8 @@ Danh sách data source cho `redmi_watch_5_active` trong Mi Create **không có**
 | Thành phần | Source | Ghi chú |
 |---|---|---|
 | Giờ | `1000911`, `0911`, `1211`, `1111` | 4 chữ số tách riêng |
-| Thứ | `2012` | 7 ảnh: CN, HAI, BA, TƯ, NĂM, SÁU, BẢY |
-| Ngày / tháng | `1812`, `1012` | |
+| Thứ | `2012` | 7 ảnh tên đầy đủ: CHỦ NHẬT, THỨ HAI, THỨ BA, THỨ TƯ, THỨ NĂM, THỨ SÁU, THỨ BẢY |
+| Ngày / tháng | `1812`, `1012` | hiển thị dạng `21/10` |
 | Pin | `0841` | phần trăm |
 | Bước | `0821` | |
 | Nhịp tim | `0822` | |
@@ -118,7 +119,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.0.0
+python3 scripts/package_release.py --version v1.0.1
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -188,8 +189,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.

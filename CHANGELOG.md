@@ -2,6 +2,28 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.0.1] — 2026-10-21
+
+### Sửa lỗi hiển thị
+
+- Bỏ vạch trang trí chạy ngang qua nhãn **MỤC TIÊU**; nhãn nằm gọn dưới vòng tiến độ.
+- Bỏ vòng vạch chia bị lệch tâm 6 px quanh vòng mục tiêu.
+- Căn lại giá trị phần trăm trong vòng mục tiêu và bỏ dấu `%` thừa.
+- Mở rộng vùng số để không tràn/không cắt: bước 6 chữ số, calo 5 chữ số, nhiệt độ 3 chữ số (hỗ trợ `-10`).
+- Dịch nhãn trạng thái sang **ĐÃ KẾT NỐI** / **MẤT KẾT NỐI**.
+- Hiển thị `0` thay vì ô trống khi số bước, calo, nhịp tim hoặc mục tiêu bằng 0.
+
+### Tinh gọn nội dung
+
+- Bỏ footer tên thiết bị, dòng `HUD-CORE`, nhãn `PIN`, đơn vị `BPM`/`KCAL` và chấm trạng thái trùng với panel.
+- Tên thứ đầy đủ: **CHỦ NHẬT, THỨ HAI, THỨ BA, THỨ TƯ, THỨ NĂM, THỨ SÁU, THỨ BẢY**.
+- Ngày hiển thị dạng `21/10`, bỏ chữ **THÁNG**.
+- Giữ đơn vị `°C` cạnh giá trị nhiệt độ.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.0.0] — 2026-10-21
 
 ### Thêm mới

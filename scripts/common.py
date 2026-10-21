@@ -147,12 +147,11 @@ def parse_number(value: int, digits: int, blanking: bool = True) -> list[str | N
     raw = str(max(0, int(value))).rjust(digits, "0")
     if len(raw) > digits:
         raw = raw[-digits:]
-    out: list[str | None] = []
-    seen_non_zero = not blanking
-    for ch in raw:
-        if blanking and not seen_non_zero and ch == "0":
-            out.append(None)
-        else:
-            seen_non_zero = True
-            out.append(ch)
-    return out
+    if not blanking:
+        return list(raw)
+    first = next((index for index, ch in enumerate(raw) if ch != "0"), None)
+    if first is None:
+        # A real zero reading must still render one digit; hiding the whole
+        # field made 0 steps / 0% goal look like missing data.
+        return [None] * (digits - 1) + ["0"]
+    return [None] * first + list(raw[first:])

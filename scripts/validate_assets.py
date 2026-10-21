@@ -26,8 +26,6 @@ from common import (  # noqa: E402
 )
 
 VIETNAMESE = "ăâđêôơưĂÂĐÊÔƠƯáàảãạắằẳẵặấầẩẫậéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ"
-WEEKDAYS = ["CN", "HAI", "BA", "TƯ", "NĂM", "SÁU", "BẢY"]
-CONNECTION = ["NGOẠI TUYẾN", "SẴN SÀNG"]
 
 errors: list[str] = []
 
@@ -69,10 +67,12 @@ def main() -> int:
     W, H = meta["canvas"]["w"], meta["canvas"]["h"]
 
     # ---- fonts / Vietnamese coverage -------------------------------------------------
+    weekdays = meta["weekdays"]
+    connection = meta["connection_labels"]
     required_chars = set(VIETNAMESE)
     for label in layout["labels"]:
         required_chars |= set(label["text"])
-    for text in WEEKDAYS + CONNECTION:
+    for text in weekdays + connection:
         required_chars |= set(text)
     for font_name in ("label", "label_medium", "label_regular"):
         cmap = load_font_cmap(ROOT / meta["fonts"][font_name])
@@ -82,6 +82,7 @@ def main() -> int:
     check(all(ord(str(d)) in display_cmap for d in range(10)), "display font misses digits")
 
     # ---- static label fit and contrast ------------------------------------------------
+    label_boxes: list[tuple[str, float, float, float, float]] = []
     for label in layout["labels"]:
         font = load_font(layout, label["font"], label["size"], weight=700 if label["font"] == "display" else None)
         width = text_width(font, label["text"], label.get("tracking", 0.0)) / 4  # SS
@@ -99,6 +100,24 @@ def main() -> int:
         ratio = contrast(fg, bg)
         minimum = 3.0 if label["color"] == "muted" else 4.5
         check(ratio >= minimum, f"label {label['id']} contrast {ratio:.2f} < {minimum}")
+        label_boxes.append((label["id"], x, label["y"], x + width, label["y"] + label["size"]))
+
+    # Pairwise overlap check: a one-pixel gap is required so descenders and
+    # accents cannot collide even when a font is re-rendered.
+    for index, first in enumerate(label_boxes):
+        for second in label_boxes[index + 1 :]:
+            if (
+                first[1] < second[3] + 1
+                and second[1] < first[3] + 1
+                and first[2] < second[4] + 1
+                and second[2] < first[4] + 1
+            ):
+                errors.append(f"labels overlap: {first[0]} and {second[0]}")
+
+    ring = next(widget for widget in layout["widgets"] if widget["id"] == "goal_ring")
+    goal = next(label for label in layout["labels"] if label["id"] == "goal_label")
+    check(goal["y"] >= ring["y"] + ring["h"] + 4, "goal_label is too close to the goal ring")
+    check(goal["y"] + goal["size"] <= H - 16, "goal_label is too close to the bottom edge")
 
     # ---- canvas assets ---------------------------------------------------------------
     background = verify_png(BACKGROUND_PATH)
@@ -127,10 +146,9 @@ def main() -> int:
             expected[f"{prefix}_{digit}"] = size
         expected[f"{prefix}_minus"] = size
     for index in range(7):
-        expected[f"weekday_{index}"] = (34, 20)
+        expected[f"weekday_{index}"] = (110, 26)
     for index in range(2):
         expected[f"conn_{index}"] = (168, 26)
-        expected[f"dot_{index}"] = (8, 29)
     for pct in range(0, 101, 5):
         expected[f"ring_{pct:02d}"] = (88, 88)
 
@@ -143,7 +161,7 @@ def main() -> int:
             continue
         image = verify_png(path)
         check(image.size == size, f"{name}.png is {image.size}, expected {size}")
-        if name.startswith("digit_") or name.startswith("ring_") or name.startswith("weekday_") or name.startswith("conn_") or name.startswith("dot_"):
+        if name.startswith("digit_") or name.startswith("ring_") or name.startswith("weekday_") or name.startswith("conn_"):
             check(image.getchannel("A").getextrema()[0] == 0, f"{name}.png background is not transparent")
             check(image.getchannel("A").getextrema()[1] > 40, f"{name}.png has no visible ink")
         if name.startswith("ring_"):
