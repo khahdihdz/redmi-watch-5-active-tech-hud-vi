@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="385" viewBox="0 0 320 385">
+  <title>Tech HUD VI — frame source</title>
+  <desc>Khung HUD 320x385. Bản raster được sinh bởi scripts/generate_assets.py.</desc>
+  <rect width="320" height="385" fill="#000000"/>
+
+  <!-- dot grid -->
+  <g fill="#087EFF" opacity="0.10">
+    <circle cx="12" cy="14" r="0.5"/><circle cx="28" cy="14" r="0.5"/><circle cx="44" cy="14" r="0.5"/>
+    <circle cx="12" cy="30" r="0.5"/><circle cx="28" cy="30" r="0.5"/><circle cx="44" cy="30" r="0.5"/>
+  </g>
+
+  <!-- circuit traces -->
+  <g fill="none" stroke="#087EFF" stroke-opacity="0.22" stroke-width="1">
+    <path d="M0 74 H22 L34 86 V120"/>
+    <path d="M0 300 H20 L30 290 V258"/>
+    <path d="M320 96 H304 L292 84 V58"/>
+    <path d="M320 286 H302 L290 298 V350"/>
+    <path d="M0 180 H10 L18 188"/>
+    <path d="M320 210 H310 L302 202"/>
+  </g>
+
+  <!-- corner brackets -->
+  <g fill="none" stroke="#00D9FF" stroke-opacity="0.75" stroke-width="1.4">
+    <path d="M8 30 V8 H30"/>
+    <path d="M290 8 H312 V30"/>
+    <path d="M8 355 V377 H30"/>
+    <path d="M290 377 H312 V355"/>
+  </g>
+
+  <!-- header rule -->
+  <path d="M10 48 H310" stroke="#087EFF" stroke-opacity="0.33"/>
+  <path d="M10 48 H64" stroke="#FF6B00" stroke-opacity="0.78"/>
+
+  <!-- clock glow -->
+  <ellipse cx="160" cy="100" rx="142" ry="42" fill="#00D9FF" opacity="0.05"/>
+
+  <!-- colon -->
+  <g fill="#00D9FF">
+    <path d="M154 78 H162 L164 82 V88 L162 92 H154 L152 88 V82 Z"/>
+    <path d="M154 112 H162 L164 116 V122 L162 126 H154 L152 122 V116 Z"/>
+  </g>
+
+  <!-- clock underline -->
+  <path d="M58 148 H146 M174 148 H262" stroke="#00D9FF" stroke-opacity="0.43"/>
+
+  <!-- panels -->
+  <g fill="#02080D" fill-opacity="0.92" stroke="#00D9FF" stroke-opacity="0.22">
+    <path d="M16 156 H156 V196 L150 202 H10 V162 Z"/>
+    <path d="M170 156 H310 V196 L304 202 H164 V162 Z"/>
+    <path d="M16 208 H156 V248 L150 254 H10 V214 Z"/>
+    <path d="M170 208 H310 V248 L304 254 H164 V214 Z"/>
+    <path d="M124 262 H310 V342 L304 348 H118 V268 Z"/>
+  </g>
+
+  <!-- accents -->
+  <g stroke-width="1">
+    <path d="M18 156 H38" stroke="#00D9FF"/>
+    <path d="M172 156 H192" stroke="#FF3158"/>
+    <path d="M18 208 H38" stroke="#FF6B00"/>
+    <path d="M172 208 H192" stroke="#087EFF"/>
+    <path d="M126 262 H146" stroke="#32E69B"/>
+  </g>
+
+  <!-- progress ring -->
+  <g fill="none">
+    <circle cx="62" cy="306" r="38" stroke="#082334" stroke-width="6"/>
+    <circle cx="62" cy="306" r="38" stroke="#00D9FF" stroke-width="6" stroke-linecap="round" stroke-dasharray="205 34" transform="rotate(-90 62 306)"/>
+    <circle cx="62" cy="306" r="29" stroke="#00D9FF" stroke-opacity="0.30" stroke-width="1"/>
+  </g>
+  <g stroke="#00D9FF" stroke-opacity="0.42">
+    <path d="M62 259 V262"/><path d="M62 350 V353"/><path d="M15 306 H12"/><path d="M109 306 H112"/>
+  </g>
+
+  <!-- bottom rule -->
+  <path d="M10 358 H310" stroke="#087EFF" stroke-opacity="0.22"/>
+</svg>

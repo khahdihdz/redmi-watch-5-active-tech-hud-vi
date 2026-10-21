@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Fonts bundled in assets/fonts/ are licensed under the SIL Open Font License
+1.1 by their respective authors. See assets/fonts/OFL-BeVietnamPro.txt and
+assets/fonts/OFL-Orbitron.txt.
+
+The watch-face compiler (compile.exe) is a third-party binary from
+ooflet/Mi-Create. It is not part of this project and is not redistributed.

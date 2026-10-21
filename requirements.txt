@@ -1,0 +1,5 @@
+# Phiên bản pin cho pipeline. Pillow dùng cho render bitmap, fontTools để
+# kiểm tra glyph tiếng Việt, pytest cho unit test.
+pillow==13.0.0
+fonttools==4.67.0
+pytest==8.4.2

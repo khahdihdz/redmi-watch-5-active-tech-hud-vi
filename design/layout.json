@@ -1,0 +1,631 @@
+{
+  "meta": {
+    "name": "Tech HUD VI",
+    "title": "Tech HUD VI",
+    "version": "1.0.0",
+    "device": "Redmi Watch 5 Active",
+    "device_type": "3651",
+    "canvas": {
+      "w": 320,
+      "h": 385
+    },
+    "safe_inset": 8,
+    "preview_note": "ẢNH XEM TRƯỚC · SỐ LIỆU MINH HỌA",
+    "verification_note": "Chưa kiểm thử trên thiết bị thật tại thời điểm phát hành.",
+    "colors": {
+      "bg": "#000000",
+      "cyan": "#00D9FF",
+      "blue": "#087EFF",
+      "orange": "#FF6B00",
+      "red": "#FF3158",
+      "green": "#32E69B",
+      "text": "#F5FAFF",
+      "muted": "#7FA7CC"
+    },
+    "fonts": {
+      "display": "assets/fonts/Orbitron[wght].ttf",
+      "label": "assets/fonts/BeVietnamPro-Bold.ttf",
+      "label_medium": "assets/fonts/BeVietnamPro-SemiBold.ttf",
+      "label_regular": "assets/fonts/BeVietnamPro-Regular.ttf"
+    },
+    "sample": {
+      "weekday": 3,
+      "day": 21,
+      "month": 10,
+      "hour": [
+        1,
+        0
+      ],
+      "minute": [
+        0,
+        8
+      ],
+      "battery": 86,
+      "steps": 8642,
+      "heart": 72,
+      "calories": 412,
+      "temp": 28,
+      "goal": 86,
+      "connected": 1
+    }
+  },
+  "labels": [
+    {
+      "id": "brand",
+      "text": "TECH HUD // VN",
+      "x": 26,
+      "y": 8,
+      "font": "label",
+      "size": 9,
+      "color": "cyan",
+      "tracking": 1.4,
+      "max_width": 120
+    },
+    {
+      "id": "pin_label",
+      "text": "PIN",
+      "x": 214,
+      "y": 9,
+      "font": "label",
+      "size": 8,
+      "color": "muted",
+      "max_width": 22
+    },
+    {
+      "id": "battery_pct",
+      "text": "%",
+      "x": 298,
+      "y": 8,
+      "font": "label",
+      "size": 9,
+      "color": "cyan",
+      "max_width": 14
+    },
+    {
+      "id": "thu",
+      "text": "THỨ",
+      "x": 14,
+      "y": 26,
+      "font": "label",
+      "size": 13,
+      "color": "text",
+      "max_width": 32
+    },
+    {
+      "id": "date_dot",
+      "text": "·",
+      "x": 88,
+      "y": 24,
+      "font": "label",
+      "size": 14,
+      "color": "muted",
+      "max_width": 8
+    },
+    {
+      "id": "thang",
+      "text": "THÁNG",
+      "x": 122,
+      "y": 26,
+      "font": "label",
+      "size": 13,
+      "color": "text",
+      "max_width": 56
+    },
+    {
+      "id": "step_label",
+      "text": "BƯỚC",
+      "x": 34,
+      "y": 163,
+      "font": "label",
+      "size": 9,
+      "color": "muted",
+      "tracking": 0.8,
+      "max_width": 60
+    },
+    {
+      "id": "heart_label",
+      "text": "TIM",
+      "x": 188,
+      "y": 163,
+      "font": "label",
+      "size": 9,
+      "color": "muted",
+      "tracking": 0.8,
+      "max_width": 40
+    },
+    {
+      "id": "heart_unit",
+      "text": "BPM",
+      "x": 300,
+      "y": 164,
+      "font": "label_medium",
+      "size": 7,
+      "color": "muted",
+      "anchor": "ra",
+      "max_width": 28
+    },
+    {
+      "id": "calo_label",
+      "text": "CALO",
+      "x": 34,
+      "y": 215,
+      "font": "label",
+      "size": 9,
+      "color": "muted",
+      "tracking": 0.8,
+      "max_width": 60
+    },
+    {
+      "id": "calo_unit",
+      "text": "KCAL",
+      "x": 146,
+      "y": 216,
+      "font": "label_medium",
+      "size": 7,
+      "color": "muted",
+      "anchor": "ra",
+      "max_width": 32
+    },
+    {
+      "id": "temp_label",
+      "text": "NHIỆT ĐỘ",
+      "x": 188,
+      "y": 215,
+      "font": "label",
+      "size": 9,
+      "color": "muted",
+      "tracking": 0.6,
+      "max_width": 66
+    },
+    {
+      "id": "temp_unit",
+      "text": "°C",
+      "x": 300,
+      "y": 216,
+      "font": "label_medium",
+      "size": 7,
+      "color": "muted",
+      "anchor": "ra",
+      "max_width": 20
+    },
+    {
+      "id": "goal_label",
+      "text": "MỤC TIÊU",
+      "x": 62,
+      "y": 352,
+      "font": "label",
+      "size": 8,
+      "color": "muted",
+      "tracking": 1.0,
+      "anchor": "ma",
+      "max_width": 86
+    },
+    {
+      "id": "goal_unit",
+      "text": "%",
+      "x": 81,
+      "y": 307,
+      "font": "label",
+      "size": 8,
+      "color": "cyan",
+      "max_width": 12
+    },
+    {
+      "id": "status_label",
+      "text": "TRẠNG THÁI",
+      "x": 130,
+      "y": 270,
+      "font": "label",
+      "size": 9,
+      "color": "muted",
+      "tracking": 1.2,
+      "max_width": 100
+    },
+    {
+      "id": "core",
+      "text": "HUD-CORE // 1.0.0",
+      "x": 130,
+      "y": 326,
+      "font": "label_medium",
+      "size": 7,
+      "color": "muted",
+      "max_width": 140
+    },
+    {
+      "id": "footer",
+      "text": "REDMI WATCH 5 ACTIVE · TECH HUD VI",
+      "x": 160,
+      "y": 371,
+      "font": "label_medium",
+      "size": 7,
+      "color": "muted",
+      "anchor": "ma",
+      "tracking": 0.4,
+      "max_width": 290
+    }
+  ],
+  "panels": [
+    {
+      "id": "steps",
+      "x": 10,
+      "y": 156,
+      "w": 146,
+      "h": 46,
+      "accent": "cyan"
+    },
+    {
+      "id": "heart",
+      "x": 164,
+      "y": 156,
+      "w": 146,
+      "h": 46,
+      "accent": "red"
+    },
+    {
+      "id": "calories",
+      "x": 10,
+      "y": 208,
+      "w": 146,
+      "h": 46,
+      "accent": "orange"
+    },
+    {
+      "id": "temp",
+      "x": 164,
+      "y": 208,
+      "w": 146,
+      "h": 46,
+      "accent": "blue"
+    },
+    {
+      "id": "status",
+      "x": 118,
+      "y": 262,
+      "w": 192,
+      "h": 86,
+      "accent": "green"
+    }
+  ],
+  "icons": [
+    {
+      "id": "battery",
+      "kind": "battery",
+      "x": 240,
+      "y": 8,
+      "w": 20,
+      "h": 12,
+      "color": "cyan"
+    },
+    {
+      "id": "steps",
+      "kind": "steps",
+      "x": 18,
+      "y": 162,
+      "w": 11,
+      "h": 11,
+      "color": "cyan"
+    },
+    {
+      "id": "heart",
+      "kind": "heart",
+      "x": 172,
+      "y": 162,
+      "w": 11,
+      "h": 11,
+      "color": "red"
+    },
+    {
+      "id": "calories",
+      "kind": "flame",
+      "x": 18,
+      "y": 214,
+      "w": 11,
+      "h": 11,
+      "color": "orange"
+    },
+    {
+      "id": "temp",
+      "kind": "thermo",
+      "x": 172,
+      "y": 214,
+      "w": 11,
+      "h": 11,
+      "color": "blue"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "status_dot",
+      "kind": "imagelist",
+      "x": 12,
+      "y": 11,
+      "w": 8,
+      "h": 8,
+      "source": "2041",
+      "default": 0,
+      "images": [
+        "dot_0",
+        "dot_1"
+      ],
+      "preview": 1
+    },
+    {
+      "id": "weekday",
+      "kind": "imagelist",
+      "x": 46,
+      "y": 24,
+      "w": 34,
+      "h": 20,
+      "source": "2012",
+      "default": 0,
+      "images": [
+        "weekday_0",
+        "weekday_1",
+        "weekday_2",
+        "weekday_3",
+        "weekday_4",
+        "weekday_5",
+        "weekday_6"
+      ],
+      "preview": 3
+    },
+    {
+      "id": "day",
+      "kind": "dignum",
+      "x": 96,
+      "y": 24,
+      "w": 20,
+      "h": 20,
+      "source": "1812",
+      "digits": 2,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_small",
+      "preview": "21"
+    },
+    {
+      "id": "month",
+      "kind": "dignum",
+      "x": 182,
+      "y": 24,
+      "w": 20,
+      "h": 20,
+      "source": "1012",
+      "digits": 2,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_small",
+      "preview": "10"
+    },
+    {
+      "id": "battery",
+      "kind": "dignum",
+      "x": 266,
+      "y": 6,
+      "w": 30,
+      "h": 18,
+      "source": "0841",
+      "digits": 3,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_batt",
+      "preview": "86"
+    },
+    {
+      "id": "hour_high",
+      "kind": "dignum",
+      "x": 52,
+      "y": 56,
+      "w": 48,
+      "h": 88,
+      "source": "1000911",
+      "digits": 1,
+      "spacing": 0,
+      "blanking": 0,
+      "align": 0,
+      "image": "digit_time",
+      "preview": "1"
+    },
+    {
+      "id": "hour_low",
+      "kind": "dignum",
+      "x": 100,
+      "y": 56,
+      "w": 48,
+      "h": 88,
+      "source": "0911",
+      "digits": 1,
+      "spacing": 0,
+      "blanking": 0,
+      "align": 0,
+      "image": "digit_time",
+      "preview": "0"
+    },
+    {
+      "id": "minute_high",
+      "kind": "dignum",
+      "x": 172,
+      "y": 56,
+      "w": 48,
+      "h": 88,
+      "source": "1211",
+      "digits": 1,
+      "spacing": 0,
+      "blanking": 0,
+      "align": 0,
+      "image": "digit_time",
+      "preview": "0"
+    },
+    {
+      "id": "minute_low",
+      "kind": "dignum",
+      "x": 220,
+      "y": 56,
+      "w": 48,
+      "h": 88,
+      "source": "1111",
+      "digits": 1,
+      "spacing": 0,
+      "blanking": 0,
+      "align": 0,
+      "image": "digit_time",
+      "preview": "8"
+    },
+    {
+      "id": "steps",
+      "kind": "dignum",
+      "x": 76,
+      "y": 176,
+      "w": 70,
+      "h": 24,
+      "source": "0821",
+      "digits": 5,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_metric",
+      "preview": "8642"
+    },
+    {
+      "id": "heart",
+      "kind": "dignum",
+      "x": 258,
+      "y": 176,
+      "w": 42,
+      "h": 24,
+      "source": "0822",
+      "digits": 3,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_metric",
+      "preview": "72"
+    },
+    {
+      "id": "calories",
+      "kind": "dignum",
+      "x": 76,
+      "y": 228,
+      "w": 56,
+      "h": 24,
+      "source": "0823",
+      "digits": 4,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_metric",
+      "preview": "412"
+    },
+    {
+      "id": "temp",
+      "kind": "dignum",
+      "x": 258,
+      "y": 228,
+      "w": 28,
+      "h": 24,
+      "source": "2031",
+      "digits": 2,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_metric",
+      "preview": "28"
+    },
+    {
+      "id": "goal_ring",
+      "kind": "imagelist",
+      "x": 18,
+      "y": 256,
+      "w": 88,
+      "h": 88,
+      "source": "1021",
+      "default": 0,
+      "images": [
+        "ring_00",
+        "ring_05",
+        "ring_10",
+        "ring_15",
+        "ring_20",
+        "ring_25",
+        "ring_30",
+        "ring_35",
+        "ring_40",
+        "ring_45",
+        "ring_50",
+        "ring_55",
+        "ring_60",
+        "ring_65",
+        "ring_70",
+        "ring_75",
+        "ring_80",
+        "ring_85",
+        "ring_90",
+        "ring_95",
+        "ring_100"
+      ],
+      "thresholds": [
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30,
+        35,
+        40,
+        45,
+        50,
+        55,
+        60,
+        65,
+        70,
+        75,
+        80,
+        85,
+        90,
+        95,
+        100
+      ],
+      "preview": 17
+    },
+    {
+      "id": "goal_value",
+      "kind": "dignum",
+      "x": 44,
+      "y": 303,
+      "w": 36,
+      "h": 18,
+      "source": "1021",
+      "digits": 3,
+      "spacing": 0,
+      "blanking": 1,
+      "align": 0,
+      "image": "digit_pct",
+      "preview": "86"
+    },
+    {
+      "id": "status",
+      "kind": "imagelist",
+      "x": 128,
+      "y": 285,
+      "w": 168,
+      "h": 26,
+      "source": "2041",
+      "default": 0,
+      "images": [
+        "conn_0",
+        "conn_1"
+      ],
+      "preview": 1
+    }
+  ],
+  "notes": {
+    "distance": "Redmi Watch 5 Active (DeviceType 3651) không công bố nguồn dữ liệu quãng đường trong danh sách source của Mi Create; dự án không hiển thị KM để tránh dữ liệu giả.",
+    "weather": "Ô NHIỆT ĐỘ dùng source 2031 (Weather temp C) do ứng dụng điện thoại cung cấp.",
+    "connection": "Panel TRẠNG THÁI dùng source 2041 (BT connection status), không phải trạng thái mô phỏng.",
+    "goal": "Vòng MỤC TIÊU dùng source 1021 (phần trăm mục tiêu bước chân), 21 mức 5%."
+  }
+}

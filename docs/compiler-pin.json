@@ -1,0 +1,10 @@
+{
+  "project": "ooflet/Mi-Create",
+  "commit": "586a917dec69626447254adc965daabb97fb30dc",
+  "path": "src/compiler/compile.exe",
+  "sha256": "bf0f7230f4fd08ed45d9a9fd1b8359a679b04b87998825a259e0ef49ba239f30",
+  "size": 12999680,
+  "license": "Third-party closed-source compiler, not redistributed by this repository",
+  "invocation": "compile.exe -b <tech_hud_vi.fprj> <output-dir> tech-hud-vi.bin 1461256429",
+  "notes": "Mi Create documents Wine support on Linux; this project uses a windows-2022 runner because the compiler targets .NET Framework 4.7.2."
+}
