@@ -17,16 +17,30 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile compile.exe -UseBasicParsing
           (Get-FileHash compile.exe -Algorithm SHA256).Hash
 
-      - name: Install ILSpy
+      - name: Install tools
         shell: pwsh
         run: |
           dotnet tool install --global ilspycmd
+          dotnet tool install --global dotnet-bundle
           "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
 
-      - name: Decompile
+      - name: Extract bundle
         shell: pwsh
         run: |
-          ilspycmd -o decompiled compile.exe 2>&1 | Select-Object -Last 5
+          New-Item -ItemType Directory -Force extracted | Out-Null
+          dotnet bundle extract -o extracted compile.exe 2>&1 | Select-Object -Last 10
+          Get-ChildItem extracted -Recurse -Filter *.dll | Select-Object Name, Length
+
+      - name: Decompile all assemblies
+        shell: pwsh
+        run: |
+          $i = 0
+          Get-ChildItem extracted -Recurse -Filter *.dll | ForEach-Object {
+            $i++
+            $out = "decompiled\$i"
+            Write-Host "== $($_.Name) -> $out"
+            ilspycmd -o $out $_.FullName 2>&1 | Select-Object -Last 3
+          }
 
       - name: Upload decompiled source
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
