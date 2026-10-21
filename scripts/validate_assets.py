@@ -119,9 +119,9 @@ def main() -> int:
     for prefix, size in {
         "digit_time": (48, 88),
         "digit_metric": (14, 24),
-        "digit_small": (10, 20),
-        "digit_batt": (10, 18),
-        "digit_pct": (12, 18),
+        "digit_small": (10, 24),
+        "digit_batt": (10, 24),
+        "digit_pct": (12, 20),
     }.items():
         for digit in range(10):
             expected[f"{prefix}_{digit}"] = size
@@ -130,7 +130,7 @@ def main() -> int:
         expected[f"weekday_{index}"] = (34, 20)
     for index in range(2):
         expected[f"conn_{index}"] = (168, 26)
-        expected[f"dot_{index}"] = (8, 8)
+        expected[f"dot_{index}"] = (8, 29)
     for pct in range(0, 101, 5):
         expected[f"ring_{pct:02d}"] = (88, 88)
 

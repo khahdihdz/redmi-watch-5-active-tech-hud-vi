@@ -41,6 +41,17 @@ Kết luận:
 - Không phân phối lại `compile.exe`.
 - Nếu compiler không khả dụng, pipeline chỉ phát hành preview + source và ghi rõ **không có file cài đặt**.
 
+## 3.1. Ràng buộc ảnh của compiler Gen2 (DeviceType 3651)
+
+Kiểm chứng bằng cách giải mã assembly `XiaomiWatch.Common` nhúng trong `compile.exe` (chỉ để hiểu định dạng, không phân phối lại):
+
+- `SetupImageList` gọi `BitmapList.Split('|')` rồi `s.Split(':')[1]` cho mọi widget `Shape="31"`. Vì vậy **mỗi entry của image list bắt buộc có tiền tố `(giá_trị):`**, nếu thiếu compiler ném `Index was outside the bounds of the array`.
+- `RedmiWatch5ActiveCompressor` giới hạn **256 màu RGBA** cho mỗi ảnh; vượt quá sẽ báo `Colors count is more than 256 pcs`.
+- Bộ nén tạo buffer đầu ra bằng đúng kích thước dữ liệu đã pad `(width + 1) × height`. Với ảnh nhỏ hơn 256 byte sau pad, nhánh `StartingSmallData` ghi thêm header và làm tràn buffer (`Destination array was not long enough`). Vì vậy mọi bitmap được pad thêm hàng trong suốt cho tới khi `(width + 1) × height ≥ 256`.
+- Widget số dùng ảnh index 0–9; ảnh thứ 11 là dấu trừ cho giá trị âm (ví dụ nhiệt độ), đúng quy ước của Mi Create.
+
+Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_compiler_limits`) và `scripts/generate_assets.py`, rồi kiểm tra lại bằng `scripts/validate_assets.py` trước khi biên dịch.
+
 ## 4. Tiếng Việt
 
 - Định dạng `.fprj` không hỗ trợ nhúng font/text động; mọi widget là ảnh hoặc digit bitmap.

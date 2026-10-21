@@ -87,8 +87,41 @@ def text_bbox(font: ImageFont.FreeTypeFont, text: str, tracking: float = 0.0) ->
     return (0, 0, round(text_width(font, text, tracking) / SS), round(font.size / SS))
 
 
+MIN_PADDED_PIXELS = 256  # compile.exe small-input path needs >= 256 indexed bytes
+MAX_PALETTE_COLORS = 256
+
+
+def fit_compiler_limits(image: Image.Image) -> Image.Image:
+    """Make a bitmap acceptable to the Gen2 compiler.
+
+    compile.exe indexes every bitmap to at most 256 colours and deflates each
+    image with an output buffer the size of its zero-padded indexed data, so
+    images shorter than 256 padded bytes crash the compressor. Both limits are
+    invisible: extra rows are fully transparent and palette reduction keeps
+    antialiasing.
+    """
+    width, height = image.size
+    padded_height = height
+    while (width + 1) * padded_height < MIN_PADDED_PIXELS:
+        padded_height += 1
+    if padded_height != height:
+        padded = Image.new("RGBA", (width, padded_height), (0, 0, 0, 0))
+        padded.paste(image.convert("RGBA"), (0, 0))
+        image = padded
+    if image.convert("RGBA").getcolors(maxcolors=MAX_PALETTE_COLORS) is None:
+        image = image.quantize(
+            colors=MAX_PALETTE_COLORS,
+            method=Image.Quantize.FASTOCTREE,
+            dither=Image.Dither.NONE,
+        ).convert("RGBA")
+    return image
+
+
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    is_compiled = SRC_IMAGES in path.parents or path == PREVIEW_RAW_PATH
+    if is_compiled:
+        image = fit_compiler_limits(image)
     image.save(path, format="PNG", optimize=True)
 
 
