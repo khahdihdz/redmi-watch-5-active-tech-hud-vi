@@ -22,25 +22,31 @@ jobs:
         run: |
           dotnet tool install --global ilspycmd
           python -m pip install --upgrade pip
-          python -m pip install sfextract
+          python -m pip install dnfile
           "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
 
-      - name: Extract bundle
+      - name: Extract embedded assemblies
         shell: pwsh
         run: |
-          sfextract compile.exe -o extracted 2>&1 | Select-Object -Last 10
-          Get-ChildItem extracted -Recurse | Select-Object FullName, Length
+          @'
+          import pathlib
+          import dnfile
 
-      - name: Decompile all assemblies
+          pe = dnfile.dnPE("compile.exe")
+          for resource in pe.net.resources:
+              name = str(resource.name)
+              print("resource:", name, len(resource.data))
+              if "XiaomiWatch.Common" in name:
+                  pathlib.Path("common.dll").write_bytes(resource.data)
+          '@ | Set-Content extract.py
+          python extract.py
+          Get-Item common.dll | Select-Object Name, Length
+
+      - name: Decompile common assembly
         shell: pwsh
         run: |
-          $i = 0
-          Get-ChildItem extracted -Recurse -Filter *.dll | ForEach-Object {
-            $i++
-            $out = "decompiled\$i"
-            Write-Host "== $($_.Name) -> $out"
-            ilspycmd -o $out $_.FullName 2>&1 | Select-Object -Last 3
-          }
+          ilspycmd -o decompiled common.dll 2>&1 | Select-Object -Last 5
+          Get-ChildItem decompiled | Select-Object Name, Length
 
       - name: Upload decompiled source
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
