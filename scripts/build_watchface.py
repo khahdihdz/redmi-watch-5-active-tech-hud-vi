@@ -60,7 +60,13 @@ def compiler_command(compiler: Path) -> list[str]:
     return [str(compiler)]
 
 
-def stage_project(stage: Path) -> Path:
+def stage_project(stage: Path) -> tuple[Path, Path]:
+    """Stage the project and create the `output` folder next to the .fprj.
+
+    compile.exe resolves its internal paths (notably `output/<name>.info`)
+    relative to the directory containing the .fprj, not to the process CWD,
+    so that folder must exist before the compiler starts.
+    """
     if stage.exists():
         shutil.rmtree(stage)
     stage.mkdir(parents=True)
@@ -69,7 +75,30 @@ def stage_project(stage: Path) -> Path:
     # Some compiler builds look for the preview next to the project as well.
     shutil.copy2(SRC_DIR / "preview.png", stage / "preview.png")
     shutil.copy2(SRC_DIR / "preview.png", stage / "images" / "preview.png")
-    return stage / FPRJ_PATH.name
+    output_dir = stage / "output"
+    output_dir.mkdir()
+    return stage / FPRJ_PATH.name, output_dir
+
+
+def is_face_binary(path: Path) -> bool:
+    try:
+        if not path.is_file() or path.stat().st_size < 40 * 1024:
+            return False
+        with path.open("rb") as fh:
+            return fh.read(4) == b"\x5a\xa5\x34\x12"
+    except OSError:
+        return False
+
+
+def find_compiled_binaries(*directories: Path) -> list[Path]:
+    found: dict[Path, Path] = {}
+    for directory in directories:
+        if not directory.is_dir():
+            continue
+        for path in directory.rglob("*"):
+            if is_face_binary(path):
+                found[path.resolve()] = path
+    return [found[key] for key in sorted(found)]
 
 
 def write_build_info(info: dict) -> Path:
@@ -138,11 +167,7 @@ def main() -> int:
 
     stage_root = Path(os.environ.get("WATCHFACE_BUILD_DIR", Path(tempfile.gettempdir()) / "tech-hud-build"))
     stage = stage_root / "project"
-    fprj = stage_project(stage)
-    output_dir = stage_root / "output"
-    if output_dir.exists():
-        shutil.rmtree(output_dir)
-    output_dir.mkdir(parents=True)
+    fprj, output_dir = stage_project(stage)
 
     command = compiler_command(compiler) + [
         "-b",
@@ -156,11 +181,16 @@ def main() -> int:
         print(f"FAIL: compiler exit code {result.returncode}")
         return 4
 
-    produced = sorted(output_dir.glob("*.bin")) + sorted(output_dir.glob("*.face"))
+    produced = find_compiled_binaries(output_dir, stage)
     if not produced:
         print("FAIL: compiler exit 0 nhưng không tạo file output")
+        for path in sorted(output_dir.rglob("*")):
+            print(f"  output/: {path.relative_to(output_dir)}")
+        for path in sorted(stage.rglob("*")):
+            print(f"  project/: {path.relative_to(stage)}")
         return 5
     artifact = produced[0]
+    print(f"OK: compiler tạo {artifact} ({artifact.stat().st_size} bytes)")
     if artifact.suffix.lower() != ".bin":
         renamed = output_dir / "tech-hud-vi.bin"
         artifact.replace(renamed)
