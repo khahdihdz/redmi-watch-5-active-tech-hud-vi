@@ -21,15 +21,15 @@ jobs:
         shell: pwsh
         run: |
           dotnet tool install --global ilspycmd
-          dotnet tool install --global dotnet-bundle
+          python -m pip install --upgrade pip
+          python -m pip install sfextract
           "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append
 
       - name: Extract bundle
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force extracted | Out-Null
-          dotnet bundle extract -o extracted compile.exe 2>&1 | Select-Object -Last 10
-          Get-ChildItem extracted -Recurse -Filter *.dll | Select-Object Name, Length
+          sfextract compile.exe -o extracted 2>&1 | Select-Object -Last 10
+          Get-ChildItem extracted -Recurse | Select-Object FullName, Length
 
       - name: Decompile all assemblies
         shell: pwsh
