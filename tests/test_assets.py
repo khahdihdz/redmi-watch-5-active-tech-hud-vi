@@ -2,10 +2,23 @@ import subprocess
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from common import parse_number  # noqa: E402
+
+
+def test_digit_sets_share_one_height():
+    for prefix in ("digit_time", "digit_metric", "digit_small", "digit_batt", "digit_pct"):
+        heights = []
+        for digit in range(10):
+            image = Image.open(ROOT / "src" / "watchface" / "images" / f"{prefix}_{digit}.png").convert("RGBA")
+            bbox = image.getchannel("A").getbbox()
+            assert bbox is not None, f"{prefix}_{digit} has no ink"
+            heights.append(bbox[3] - bbox[1])
+        assert max(heights) - min(heights) <= 2, f"{prefix} digit heights differ: {heights}"
 
 
 def test_zero_value_keeps_one_digit():

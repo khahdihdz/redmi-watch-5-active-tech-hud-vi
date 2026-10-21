@@ -15,7 +15,7 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 - Đồng hồ số `HH:MM` cỡ lớn, độ tương phản cao, có glow cyan tiết chế.
 - Khung HUD góc vát, đường mạch điện tử, panel thông số và vòng tiến độ.
 - Bố cục tối giản: chỉ giữ dữ liệu cần thiết, không footer tên máy, không mã phiên bản, không nhãn đơn vị lặp.
-- Toàn bộ nhãn tiếng Việt được **rasterize thành bitmap** bằng font Be Vietnam Pro, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
+- Toàn bộ nhãn và chữ số được **rasterize thành bitmap** bằng font **Be Vietnam Pro**, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
 - Dữ liệu động lấy từ các source đã được tài liệu hoá cho đúng mẫu máy.
 - Build, kiểm tra, đóng gói và phát hành tự động bằng GitHub Actions.
 
@@ -119,7 +119,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.0.1
+python3 scripts/package_release.py --version v1.0.2
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -189,8 +189,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.
@@ -225,7 +225,7 @@ grep tech-hud-vi.bin SHA256SUMS.txt
 .
 ├── assets/
 │   ├── backgrounds/        # background 320x385
-│   ├── fonts/              # Be Vietnam Pro + Orbitron (OFL)
+│   ├── fonts/              # Be Vietnam Pro (OFL)
 │   ├── icons/              # icon SVG nguồn
 │   ├── source/             # SVG khung HUD
 │   └── manifest.json       # hash của asset sinh ra
@@ -271,7 +271,7 @@ Chi tiết quyết định kỹ thuật: [docs/format-research.md](docs/format-r
 ## 10. Giấy phép
 
 - Mã nguồn, thiết kế, script: **MIT** — xem [LICENSE](LICENSE).
-- Font **Be Vietnam Pro** và **Orbitron**: SIL Open Font License 1.1, bản quyền thuộc tác giả font. Xem `assets/fonts/OFL-*.txt`.
+- Font **Be Vietnam Pro**: SIL Open Font License 1.1, bản quyền thuộc tác giả font. Xem `assets/fonts/OFL-BeVietnamPro.txt`. File Orbitron còn trong thư mục font nhưng không còn được dùng để render kể từ v1.0.2.
 - Compiler `compile.exe`: công cụ bên thứ ba, **không** thuộc dự án và **không** được phân phối lại.
 
 Dự án không can thiệp bootloader, root, firmware hệ thống hoặc khai thác lỗ hổng bảo mật.

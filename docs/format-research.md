@@ -55,8 +55,9 @@ Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_comp
 ## 4. Tiếng Việt
 
 - Định dạng `.fprj` không hỗ trợ nhúng font/text động; mọi widget là ảnh hoặc digit bitmap.
-- Vì vậy toàn bộ nhãn được rasterize bằng **Be Vietnam Pro** (có đủ `ă â đ ê ô ơ ư` và các dấu thanh). Kiểm tra bằng `fontTools` cmap trong `validate_assets.py`.
-- Font **Orbitron** chỉ dùng cho chữ số; font này không có glyph tiếng Việt và không được dùng cho nhãn.
+- Vì vậy toàn bộ nhãn **và chữ số** được rasterize bằng **Be Vietnam Pro** (có đủ `ă â đ ê ô ơ ư` và các dấu thanh). Kiểm tra bằng `fontTools` cmap trong `validate_assets.py`.
+- Be Vietnam Pro là font tỉ lệ, nên mỗi bộ số 0–9 dùng **một cỡ chữ chung**; nếu fit từng glyph riêng, số `1` sẽ cao hơn `0`/`8`.
+- Orbitron không còn được dùng để render kể từ v1.0.2.
 - Preview và fprj dùng cùng một bộ bitmap, nên không có sai lệch giữa ảnh xem trước và mặt đồng hồ.
 
 ## 5. Dữ liệu

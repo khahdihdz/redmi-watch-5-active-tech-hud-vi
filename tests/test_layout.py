@@ -14,6 +14,14 @@ def test_target_and_canvas():
     assert meta["canvas"] == {"w": 320, "h": 385}
 
 
+def test_all_rendering_uses_be_vietnam_pro():
+    fonts = LAYOUT["meta"]["fonts"]
+    assert fonts["display"].endswith("BeVietnamPro-Bold.ttf")
+    for label in LAYOUT["labels"]:
+        assert "BeVietnamPro" in fonts[label["font"]]
+    assert "Orbitron" not in json.dumps(LAYOUT, ensure_ascii=False)
+
+
 def test_palette_is_locked():
     assert LAYOUT["meta"]["colors"] == {
         "bg": "#000000",

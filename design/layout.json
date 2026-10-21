@@ -2,7 +2,7 @@
   "meta": {
     "name": "Tech HUD VI",
     "title": "Tech HUD VI",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "device": "Redmi Watch 5 Active",
     "device_type": "3651",
     "canvas": {
@@ -36,7 +36,7 @@
       "muted": "#7FA7CC"
     },
     "fonts": {
-      "display": "assets/fonts/Orbitron[wght].ttf",
+      "display": "assets/fonts/BeVietnamPro-Bold.ttf",
       "label": "assets/fonts/BeVietnamPro-Bold.ttf",
       "label_medium": "assets/fonts/BeVietnamPro-SemiBold.ttf",
       "label_regular": "assets/fonts/BeVietnamPro-Regular.ttf"
@@ -330,9 +330,9 @@
     {
       "id": "hour_high",
       "kind": "dignum",
-      "x": 52,
+      "x": 24,
       "y": 56,
-      "w": 48,
+      "w": 64,
       "h": 88,
       "source": "1000911",
       "digits": 1,
@@ -345,9 +345,9 @@
     {
       "id": "hour_low",
       "kind": "dignum",
-      "x": 100,
+      "x": 88,
       "y": 56,
-      "w": 48,
+      "w": 64,
       "h": 88,
       "source": "0911",
       "digits": 1,
@@ -360,9 +360,9 @@
     {
       "id": "minute_high",
       "kind": "dignum",
-      "x": 172,
+      "x": 168,
       "y": 56,
-      "w": 48,
+      "w": 64,
       "h": 88,
       "source": "1211",
       "digits": 1,
@@ -375,9 +375,9 @@
     {
       "id": "minute_low",
       "kind": "dignum",
-      "x": 220,
+      "x": 232,
       "y": 56,
-      "w": 48,
+      "w": 64,
       "h": 88,
       "source": "1111",
       "digits": 1,

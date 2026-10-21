@@ -78,6 +78,7 @@ def main() -> int:
         cmap = load_font_cmap(ROOT / meta["fonts"][font_name])
         missing = {ch for ch in required_chars if ord(ch) not in cmap}
         check(not missing, f"{font_name} misses glyphs: {''.join(sorted(missing))}")
+    check("BeVietnamPro" in meta["fonts"]["display"], "display font is not Be Vietnam Pro")
     display_cmap = load_font_cmap(ROOT / meta["fonts"]["display"])
     check(all(ord(str(d)) in display_cmap for d in range(10)), "display font misses digits")
 
@@ -136,7 +137,7 @@ def main() -> int:
     # ---- widget bitmaps ---------------------------------------------------------------
     expected: dict[str, tuple[int, int]] = {"background": (W, H), "preview": (W, H)}
     for prefix, size in {
-        "digit_time": (48, 88),
+        "digit_time": (64, 88),
         "digit_metric": (14, 24),
         "digit_small": (10, 24),
         "digit_batt": (10, 24),

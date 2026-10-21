@@ -194,13 +194,13 @@ def build_background() -> Image.Image:
     for cy in (78, 112):
         gdraw = ImageDraw.Draw(image, "RGBA")
         gdraw.polygon(
-            [(sc(154), sc(cy)), (sc(162), sc(cy)), (sc(164), sc(cy + 4)), (sc(164), sc(cy + 10)), (sc(162), sc(cy + 14)), (sc(154), sc(cy + 14)), (sc(152), sc(cy + 10)), (sc(152), sc(cy + 4))],
+            [(sc(156), sc(cy)), (sc(164), sc(cy)), (sc(166), sc(cy + 4)), (sc(166), sc(cy + 10)), (sc(164), sc(cy + 14)), (sc(156), sc(cy + 14)), (sc(154), sc(cy + 10)), (sc(154), sc(cy + 4))],
             fill=cyan + (235,),
         )
 
     # underline under the clock
-    draw.line([(sc(58), sc(148)), (sc(146), sc(148))], fill=cyan + (110,), width=sc(1))
-    draw.line([(sc(174), sc(148)), (sc(262), sc(148))], fill=cyan + (110,), width=sc(1))
+    draw.line([(sc(34), sc(148)), (sc(148), sc(148))], fill=cyan + (110,), width=sc(1))
+    draw.line([(sc(172), sc(148)), (sc(286), sc(148))], fill=cyan + (110,), width=sc(1))
 
     # panels
     for panel in LAYOUT["panels"]:
@@ -258,25 +258,54 @@ def render_glyph(
     return downsample(layer, size)
 
 
+def common_font_size(
+    size: tuple[int, int],
+    family: str,
+    font_size: int,
+    weight: int | None,
+    padding: float,
+    chars: str = "0123456789-",
+) -> int:
+    """Choose one font size for every glyph in a digit set.
+
+    Be Vietnam Pro is proportional: "1" is much narrower than "0". Fitting
+    each glyph independently made "1" fill the cell height while "0" and "8"
+    were scaled down by width, so the clock looked uneven. A shared size keeps
+    cap heights and baselines identical.
+    """
+    draw = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    font = load_font(LAYOUT, family, font_size, weight=weight)
+    usable_w = sc(size[0]) - sc(padding * 2)
+    usable_h = sc(size[1]) - sc(padding * 2)
+    factor = 1.0
+    for char in chars:
+        bbox = draw.textbbox((0, 0), char, font=font, anchor="lt")
+        width = bbox[2] - bbox[0]
+        height = bbox[3] - bbox[1]
+        factor = min(factor, usable_w / max(width, 1), usable_h / max(height, 1))
+    return max(4, int(font_size * factor * 0.98))
+
+
 def build_digits() -> dict[str, list[Path]]:
     created: dict[str, list[Path]] = {}
     specs = {
-        "digit_time": ((48, 88), "display", 92, 700, rgba(LAYOUT, "text"), hex_rgb(COLORS["cyan"]), 3.0),
+        "digit_time": ((64, 88), "display", 92, 700, rgba(LAYOUT, "text"), hex_rgb(COLORS["cyan"]), 3.0),
         "digit_metric": ((14, 24), "display", 24, 700, rgba(LAYOUT, "text"), None, 1.0),
         "digit_small": ((10, 20), "label", 17, 600, rgba(LAYOUT, "text"), None, 0.5),
         "digit_batt": ((10, 18), "label", 14, 600, rgba(LAYOUT, "cyan"), None, 0.5),
         "digit_pct": ((12, 18), "label", 14, 600, rgba(LAYOUT, "cyan"), None, 0.5),
     }
     for prefix, (size, family, font_size, weight, fill, glow, padding) in specs.items():
+        shared_size = common_font_size(size, family, font_size, weight, padding)
         paths = []
         for digit in range(10):
-            image = render_glyph(str(digit), size, family, font_size, fill, glow_colour=glow, weight=weight, padding=padding)
+            image = render_glyph(str(digit), size, family, shared_size, fill, glow_colour=glow, weight=weight, padding=padding)
             path = SRC_IMAGES / f"{prefix}_{digit}.png"
             save_png(image, path)
             paths.append(path)
         # Index 10 is the minus sign: compile.exe/Mi Create numbers widgets index
         # the 11th bitmap when the formatted value is negative (e.g. temperature).
-        minus = render_glyph("-", size, family, font_size, fill, glow_colour=glow, weight=weight, padding=padding)
+        minus = render_glyph("-", size, family, shared_size, fill, glow_colour=glow, weight=weight, padding=padding)
         path = SRC_IMAGES / f"{prefix}_minus.png"
         save_png(minus, path)
         paths.append(path)

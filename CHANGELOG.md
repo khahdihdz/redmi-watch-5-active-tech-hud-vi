@@ -2,6 +2,18 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.0.2] — 2026-10-21
+
+### Thay đổi
+
+- Dùng **Be Vietnam Pro** cho cả chữ số thời gian và số liệu, thay cho Orbitron.
+- Chọn một cỡ chữ chung cho cả bộ 0–9 để các chữ số cao bằng nhau; sửa lỗi số `1` cao vượt các số `0`, `8`.
+- Giữ nguyên bố cục tối giản, tên thứ đầy đủ và các sửa lỗi tràn nội dung của v1.0.1.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.0.1] — 2026-10-21
 
 ### Sửa lỗi hiển thị
