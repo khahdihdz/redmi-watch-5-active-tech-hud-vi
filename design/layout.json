@@ -2,7 +2,7 @@
   "meta": {
     "name": "Tech HUD VI — Brass",
     "title": "Tech HUD VI",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "device": "Redmi Watch 5 Active",
     "device_type": "3651",
     "canvas": {
@@ -58,8 +58,7 @@
       "steps": 8642,
       "heart": 72,
       "calories": 412,
-      "temp": 28,
-      "goal": 86
+      "temp": 28
     },
     "corner_radius": 82
   },
@@ -101,8 +100,8 @@
     {
       "id": "step_label",
       "text": "BƯỚC",
-      "x": 34,
-      "y": 162,
+      "x": 42,
+      "y": 166,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -113,8 +112,8 @@
     {
       "id": "heart_label",
       "text": "TIM",
-      "x": 188,
-      "y": 162,
+      "x": 42,
+      "y": 214,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -125,8 +124,8 @@
     {
       "id": "calo_label",
       "text": "CALO",
-      "x": 34,
-      "y": 214,
+      "x": 42,
+      "y": 262,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -137,8 +136,8 @@
     {
       "id": "temp_label",
       "text": "NHIỆT ĐỘ",
-      "x": 188,
-      "y": 214,
+      "x": 42,
+      "y": 310,
       "font": "label",
       "size": 9,
       "color": "muted",
@@ -149,59 +148,46 @@
     {
       "id": "temp_unit",
       "text": "°C",
-      "x": 292,
-      "y": 228,
+      "x": 282,
+      "y": 318,
       "font": "label_medium",
       "size": 8,
       "color": "muted",
       "max_width": 16,
       "weight": 600
-    },
-    {
-      "id": "goal_label",
-      "text": "MỤC TIÊU",
-      "x": 160,
-      "y": 354,
-      "font": "label",
-      "size": 8,
-      "color": "brass",
-      "tracking": 0.8,
-      "anchor": "ma",
-      "max_width": 86,
-      "weight": 700
     }
   ],
   "panels": [
     {
       "id": "steps",
       "x": 10,
-      "y": 156,
-      "w": 146,
-      "h": 46,
+      "y": 158,
+      "w": 300,
+      "h": 40,
       "accent": "brass"
     },
     {
       "id": "heart",
-      "x": 164,
-      "y": 156,
-      "w": 146,
-      "h": 46,
+      "x": 10,
+      "y": 206,
+      "w": 300,
+      "h": 40,
       "accent": "copper"
     },
     {
       "id": "calories",
       "x": 10,
-      "y": 208,
-      "w": 146,
-      "h": 46,
+      "y": 254,
+      "w": 300,
+      "h": 40,
       "accent": "amber"
     },
     {
       "id": "temp",
-      "x": 164,
-      "y": 208,
-      "w": 146,
-      "h": 46,
+      "x": 10,
+      "y": 302,
+      "w": 300,
+      "h": 40,
       "accent": "patina"
     }
   ],
@@ -218,8 +204,8 @@
     {
       "id": "steps",
       "kind": "steps",
-      "x": 18,
-      "y": 162,
+      "x": 22,
+      "y": 168,
       "w": 11,
       "h": 11,
       "color": "brass"
@@ -227,8 +213,8 @@
     {
       "id": "heart",
       "kind": "heart",
-      "x": 172,
-      "y": 162,
+      "x": 22,
+      "y": 216,
       "w": 11,
       "h": 11,
       "color": "red"
@@ -236,8 +222,8 @@
     {
       "id": "calories",
       "kind": "flame",
-      "x": 18,
-      "y": 214,
+      "x": 22,
+      "y": 264,
       "w": 11,
       "h": 11,
       "color": "copper"
@@ -245,8 +231,8 @@
     {
       "id": "temp",
       "kind": "thermo",
-      "x": 172,
-      "y": 214,
+      "x": 22,
+      "y": 312,
       "w": 11,
       "h": 11,
       "color": "patina"
@@ -381,8 +367,8 @@
     {
       "id": "steps",
       "kind": "dignum",
-      "x": 62,
-      "y": 174,
+      "x": 210,
+      "y": 169,
       "w": 84,
       "h": 24,
       "source": "0821",
@@ -396,8 +382,8 @@
     {
       "id": "heart",
       "kind": "dignum",
-      "x": 258,
-      "y": 174,
+      "x": 252,
+      "y": 217,
       "w": 42,
       "h": 24,
       "source": "0822",
@@ -411,8 +397,8 @@
     {
       "id": "calories",
       "kind": "dignum",
-      "x": 76,
-      "y": 226,
+      "x": 224,
+      "y": 265,
       "w": 70,
       "h": 24,
       "source": "0823",
@@ -426,8 +412,8 @@
     {
       "id": "temp",
       "kind": "dignum",
-      "x": 248,
-      "y": 226,
+      "x": 236,
+      "y": 313,
       "w": 42,
       "h": 24,
       "source": "2031",
@@ -437,83 +423,10 @@
       "align": 0,
       "image": "digit_metric",
       "preview": "28"
-    },
-    {
-      "id": "goal_ring",
-      "kind": "imagelist",
-      "x": 116,
-      "y": 258,
-      "w": 88,
-      "h": 88,
-      "source": "1021",
-      "default": 0,
-      "images": [
-        "ring_00",
-        "ring_05",
-        "ring_10",
-        "ring_15",
-        "ring_20",
-        "ring_25",
-        "ring_30",
-        "ring_35",
-        "ring_40",
-        "ring_45",
-        "ring_50",
-        "ring_55",
-        "ring_60",
-        "ring_65",
-        "ring_70",
-        "ring_75",
-        "ring_80",
-        "ring_85",
-        "ring_90",
-        "ring_95",
-        "ring_100"
-      ],
-      "thresholds": [
-        0,
-        5,
-        10,
-        15,
-        20,
-        25,
-        30,
-        35,
-        40,
-        45,
-        50,
-        55,
-        60,
-        65,
-        70,
-        75,
-        80,
-        85,
-        90,
-        95,
-        100
-      ],
-      "preview": 17
-    },
-    {
-      "id": "goal_value",
-      "kind": "dignum",
-      "x": 142,
-      "y": 305,
-      "w": 36,
-      "h": 20,
-      "source": "1021",
-      "digits": 3,
-      "spacing": 0,
-      "blanking": 1,
-      "align": 0,
-      "image": "digit_pct",
-      "preview": "86"
     }
   ],
   "notes": {
     "distance": "Redmi Watch 5 Active (DeviceType 3651) không công bố nguồn dữ liệu quãng đường trong danh sách source của Mi Create; dự án không hiển thị KM để tránh dữ liệu giả.",
-    "weather": "Ô NHIỆT ĐỘ dùng source 2031 (Weather temp C) do ứng dụng điện thoại cung cấp.",
-    "goal": "Vòng MỤC TIÊU dùng source 1021 (phần trăm mục tiêu bước chân), 21 mức 5%."
+    "weather": "Ô NHIỆT ĐỘ dùng source 2031 (Weather temp C) do ứng dụng điện thoại cung cấp."
   }
 }

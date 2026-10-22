@@ -202,6 +202,6 @@ def parse_number(value: int, digits: int, blanking: bool = True) -> list[str | N
     first = next((index for index, ch in enumerate(raw) if ch != "0"), None)
     if first is None:
         # A real zero reading must still render one digit; hiding the whole
-        # field made 0 steps / 0% goal look like missing data.
+        # field made a valid 0 steps/calories reading look like missing data.
         return [None] * (digits - 1) + ["0"]
     return [None] * first + list(raw[first:])

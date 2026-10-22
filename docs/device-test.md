@@ -15,8 +15,7 @@ Repo chỉ cho phép phát hành **stable** khi `tests/device_verification.json`
    - Pin phần trăm khớp với cài đặt hệ thống.
    - Bước, nhịp tim, calo cập nhật khi vận động.
    - Nhiệt độ hiển thị sau khi đồng bộ thời tiết.
-   - Vòng mục tiêu thay đổi khi số bước thay đổi.
-   - Panel trạng thái chuyển giữa `SẴN SÀNG` và `NGOẠI TUYẾN` khi bật/tắt Bluetooth.
+   - Bốn dải `BƯỚC / TIM / CALO / NHIỆT ĐỘ` nằm gọn, không chồng lên nhau.
    - Không bị cắt chữ, không tràn panel, không nhấp nháy.
 5. Theo dõi pin ít nhất 24 giờ.
 6. Ghi kết quả vào `tests/device_verification.json`:

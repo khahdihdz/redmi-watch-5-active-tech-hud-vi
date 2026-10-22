@@ -13,7 +13,7 @@ LAYOUT = load_layout()
 
 
 def test_text_digit_sets_share_one_height():
-    for prefix in ("digit_metric", "digit_small", "digit_batt", "digit_pct"):
+    for prefix in ("digit_metric", "digit_small", "digit_batt"):
         heights = []
         for digit in range(10):
             image = Image.open(ROOT / "src" / "watchface" / "images" / f"{prefix}_{digit}.png").convert("RGBA")

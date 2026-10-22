@@ -304,19 +304,6 @@ def build_background() -> Image.Image:
     draw.line([(sc(34), sc(148)), (sc(148), sc(148))], fill=brass + (120,), width=sc(1))
     draw.line([(sc(172), sc(148)), (sc(286), sc(148))], fill=brass + (120,), width=sc(1))
 
-    # gear surround for the centred goal ring
-    draw_gear(draw, 160, 302, 48, 40, 14, brass, fill_alpha=8, outline_alpha=65)
-    draw.ellipse(
-        [sc(160 - 45), sc(302 - 45), sc(160 + 45), sc(302 + 45)],
-        outline=brass + (45,),
-        width=sc(1),
-    )
-
-    # base rail beneath the goal label
-    draw.line([(sc(128), sc(370)), (sc(192), sc(370))], fill=hex_rgb(COLORS["brass_dark"]) + (160,), width=sc(1))
-    draw_rivet(draw, 122, 370, 1.1)
-    draw_rivet(draw, 198, 370, 1.1)
-
     # panels
     for panel in LAYOUT["panels"]:
         draw_panel(draw, panel)
@@ -412,7 +399,6 @@ def build_digits() -> dict[str, list[Path]]:
         "digit_metric": ((14, 24), "display", 24, 700, rgba(LAYOUT, "cream"), None, 1.0),
         "digit_small": ((10, 20), "label", 17, 600, rgba(LAYOUT, "cream"), None, 0.5),
         "digit_batt": ((10, 18), "label", 14, 600, rgba(LAYOUT, "brass"), None, 0.5),
-        "digit_pct": ((12, 18), "label", 14, 600, rgba(LAYOUT, "amber"), None, 0.5),
     }
     for prefix, (size, family, font_size, weight, fill, glow, padding) in specs.items():
         shared_size = common_font_size(size, family, font_size, weight, padding)
@@ -470,36 +456,6 @@ def build_weekdays() -> list[Path]:
         draw_text(draw, (2, 6), name, font, rgba(LAYOUT, "text"), 0.2, "la")
         path = SRC_IMAGES / f"weekday_{index}.png"
         save_png(downsample(layer, (110, 26)), path)
-        paths.append(path)
-    return paths
-
-
-def build_rings() -> list[Path]:
-    paths = []
-    size = (88, 88)
-    for pct in range(0, 101, 5):
-        layer, draw = new_layer(*size)
-        box = [sc(6), sc(6), sc(82), sc(82)]
-        track = mix(hex_rgb(COLORS["brass"]), hex_rgb(COLORS["bg"]), 0.82)
-        draw.arc(box, 0, 359, fill=track + (255,), width=sc(5))
-        inner = mix(hex_rgb(COLORS["brass"]), hex_rgb(COLORS["bg"]), 0.72)
-        draw.arc([sc(15), sc(15), sc(73), sc(73)], 0, 359, fill=inner + (110,), width=sc(1))
-        draw.arc([sc(2), sc(2), sc(86), sc(86)], 0, 359, fill=hex_rgb(COLORS["brass"]) + (75,), width=sc(1))
-        if pct > 0:
-            amber = hex_rgb(COLORS["amber"])
-            end = -90 + 360 * pct / 100
-            draw.arc(box, -90, end if pct < 100 else 269.9, fill=amber + (255,), width=sc(5))
-            # rounded caps
-            for angle in (-90, end if pct < 100 else 269.9):
-                t = math.radians(angle)
-                px, py = 44 + math.cos(t) * 38, 44 + math.sin(t) * 38
-                draw.ellipse([sc(px - 2.6), sc(py - 2.6), sc(px + 2.6), sc(py + 2.6)], fill=amber + (255,))
-            mask = Image.new("L", layer.size, 0)
-            mdraw = ImageDraw.Draw(mask)
-            mdraw.arc(box, -90, end if pct < 100 else 269.9, fill=255, width=sc(5))
-            add_glow(layer, mask, hex_rgb(COLORS["amber"]) + (255,), 2.8, strength=150)
-        path = SRC_IMAGES / f"ring_{pct:02d}.png"
-        save_png(downsample(layer, size), path)
         paths.append(path)
     return paths
 
@@ -640,7 +596,6 @@ def main() -> int:
 
     build_digits()
     build_weekdays()
-    build_rings()
 
     assets: dict[str, Image.Image] = {}
     for path in sorted(SRC_IMAGES.glob("*.png")):

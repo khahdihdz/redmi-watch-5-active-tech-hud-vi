@@ -119,11 +119,6 @@ def main() -> int:
             ):
                 errors.append(f"labels overlap: {first[0]} and {second[0]}")
 
-    ring = next(widget for widget in layout["widgets"] if widget["id"] == "goal_ring")
-    goal = next(label for label in layout["labels"] if label["id"] == "goal_label")
-    check(goal["y"] >= ring["y"] + ring["h"] + 4, "goal_label is too close to the goal ring")
-    check(goal["y"] + goal["size"] <= H - 16, "goal_label is too close to the bottom edge")
-
     # ---- rounded display safety ------------------------------------------------------
     radius = meta["corner_radius"]
     for panel in layout["panels"]:
@@ -168,15 +163,12 @@ def main() -> int:
         "digit_metric": (14, 24),
         "digit_small": (10, 24),
         "digit_batt": (10, 24),
-        "digit_pct": (12, 20),
     }.items():
         for digit in range(10):
             expected[f"{prefix}_{digit}"] = size
         expected[f"{prefix}_minus"] = size
     for index in range(7):
         expected[f"weekday_{index}"] = (110, 26)
-    for pct in range(0, 101, 5):
-        expected[f"ring_{pct:02d}"] = (88, 88)
 
     on_disk = {path.stem for path in SRC_IMAGES.glob("*.png")}
     check(on_disk == set(expected), f"image set mismatch: missing={sorted(set(expected) - on_disk)} extra={sorted(on_disk - set(expected))}")
@@ -187,14 +179,9 @@ def main() -> int:
             continue
         image = verify_png(path)
         check(image.size == size, f"{name}.png is {image.size}, expected {size}")
-        if name.startswith("digit_") or name.startswith("ring_") or name.startswith("weekday_"):
+        if name.startswith("digit_") or name.startswith("weekday_"):
             check(image.getchannel("A").getextrema()[0] == 0, f"{name}.png background is not transparent")
             check(image.getchannel("A").getextrema()[1] > 40, f"{name}.png has no visible ink")
-        if name.startswith("ring_"):
-            expected_pct = int(name.split("_")[1])
-            if expected_pct == 0:
-                # only the track is allowed
-                pass
 
     # ---- .fprj -----------------------------------------------------------------------
     check(FPRJ_PATH.is_file(), "tech_hud_vi.fprj missing")

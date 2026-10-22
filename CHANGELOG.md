@@ -2,6 +2,19 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.1.1] — 2026-10-22
+
+### Thay đổi
+
+- Bỏ hoàn toàn vòng **MỤC TIÊU**, giá trị phần trăm và nhãn dưới vòng; không còn dùng source `1021`.
+- Sắp xếp lại bốn panel **BƯỚC, TIM, CALO, NHIỆT ĐỘ** thành bốn dải brass full-width, dùng khoảng trống phía dưới.
+- Bỏ bánh răng nền và thanh đế của cụm mục tiêu; giữ bánh răng trang trí, ống đồng và vùng an toàn bo góc 82 px.
+- Cập nhật validator, test và tài liệu theo bố cục mới.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.1.0] — 2026-10-22
 
 ### Thay đổi

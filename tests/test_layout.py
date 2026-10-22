@@ -46,7 +46,7 @@ def test_palette_is_locked():
 
 def test_vietnamese_labels_are_present():
     text = " ".join(label["text"] for label in LAYOUT["labels"])
-    for word in ("BƯỚC", "TIM", "CALO", "NHIỆT ĐỘ", "MỤC TIÊU"):
+    for word in ("BƯỚC", "TIM", "CALO", "NHIỆT ĐỘ"):
         assert word in text
     assert "TRẠNG THÁI" not in text
     assert "connection_labels" not in LAYOUT["meta"]
@@ -102,18 +102,13 @@ def test_metric_fields_have_room_for_large_values():
     assert widgets["battery"]["digits"] >= 3
 
 
-def test_goal_label_clears_the_ring():
-    ring = next(widget for widget in LAYOUT["widgets"] if widget["id"] == "goal_ring")
-    label = next(label for label in LAYOUT["labels"] if label["id"] == "goal_label")
-    assert label["y"] >= ring["y"] + ring["h"] + 4
-
-
-def test_goal_section_is_centered():
-    ring = next(widget for widget in LAYOUT["widgets"] if widget["id"] == "goal_ring")
-    label = next(label for label in LAYOUT["labels"] if label["id"] == "goal_label")
-    canvas_w = LAYOUT["meta"]["canvas"]["w"]
-    assert ring["x"] == (canvas_w - ring["w"]) // 2
-    assert label["x"] == canvas_w // 2
+def test_goal_section_is_removed():
+    widget_ids = {widget["id"] for widget in LAYOUT["widgets"]}
+    label_ids = {label["id"] for label in LAYOUT["labels"]}
+    assert "goal_ring" not in widget_ids
+    assert "goal_value" not in widget_ids
+    assert "goal_label" not in label_ids
+    assert "1021" not in {widget["source"] for widget in LAYOUT["widgets"]}
 
 
 def test_content_fits_rounded_display():
@@ -156,6 +151,6 @@ def test_preview_is_marked_as_illustrative():
     assert "MINH HỌA" in LAYOUT["meta"]["preview_note"]
 
 
-@pytest.mark.parametrize("widget_id", ["steps", "heart", "calories", "temp", "goal_ring", "goal_value", "weekday", "battery"])
+@pytest.mark.parametrize("widget_id", ["steps", "heart", "calories", "temp", "weekday", "battery"])
 def test_core_widgets_exist(widget_id):
     assert any(widget["id"] == widget_id for widget in LAYOUT["widgets"])
