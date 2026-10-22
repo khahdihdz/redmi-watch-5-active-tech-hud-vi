@@ -614,10 +614,16 @@ def main() -> int:
     for path in sorted(SRC_IMAGES.glob("*.png")):
         assets[path.stem] = Image.open(path).convert("RGBA")
 
-    raw_preview = build_preview(background, assets)
-    save_png(raw_preview, PREVIEW_RAW_PATH)
-    save_png(raw_preview, SRC_IMAGES / "preview.png")
-    save_png(build_captioned_preview(raw_preview), PREVIEW_PATH)
+    # The watch face preview is also parsed by the firmware's selection
+    # screen.  The v1.1.3 composite preview triggers a reboot on the target
+    # device, while the background bitmap is known safe.  Keep the full
+    # illustrative composite for the release image, but feed the background
+    # to the compiler as the on-watch selection thumbnail.
+    full_preview = build_preview(background, assets)
+    watch_preview = background.copy()
+    save_png(watch_preview, PREVIEW_RAW_PATH)
+    save_png(watch_preview, SRC_IMAGES / "preview.png")
+    save_png(build_captioned_preview(full_preview), PREVIEW_PATH)
 
     fprj = build_fprj()
     FPRJ_PATH.write_text(fprj, encoding="utf-8", newline="\n")
@@ -627,6 +633,7 @@ def main() -> int:
         "fprj_sha256": sha256_file(FPRJ_PATH),
         "background_sha256": sha256_file(BACKGROUND_PATH),
         "preview_sha256": sha256_file(PREVIEW_PATH),
+        "watch_preview_sha256": sha256_file(PREVIEW_RAW_PATH),
         "images": {
             path.name: sha256_file(path) for path in sorted(SRC_IMAGES.glob("*.png"))
         },

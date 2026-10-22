@@ -2,7 +2,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
@@ -84,6 +84,17 @@ def test_assets_and_vietnamese_glyphs():
     result = run("validate_assets.py")
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Vietnamese glyph coverage complete" in result.stdout
+
+
+def test_watch_preview_is_the_safe_background():
+    background = Image.open(ROOT / "src" / "watchface" / "images" / "background.png").convert("RGBA")
+    for path in (
+        ROOT / "src" / "watchface" / "preview.png",
+        ROOT / "src" / "watchface" / "images" / "preview.png",
+    ):
+        preview = Image.open(path).convert("RGBA")
+        difference = ImageChops.difference(preview, background).getbbox()
+        assert difference is None, f"{path} must match the safe background bitmap"
 
 
 def test_generation_is_deterministic():

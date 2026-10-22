@@ -5,5 +5,5 @@
   "firmware": null,
   "date": null,
   "tester": null,
-  "notes": "Chưa có xác nhận cài đặt và hiển thị trên thiết bị thật. Bản phát hành phải ở kênh pre-release cho tới khi trường verified được cập nhật kèm bằng chứng (ảnh chụp mặt đồng hồ, phiên bản firmware)."
+  "notes": "Đã chạy chẩn đoán trên thiết bị thật với các binary vá: toạ độ widget v1.1.3 an toàn, background v1.1.3 an toàn, preview tổng hợp v1.1.3 gây reboot khi mở danh sách chọn mặt. Cấu hình v1.1.4 dùng background làm preview nội bộ (diag-E) cũng đã chạy. Bản tech-hud-vi.bin v1.1.4 build từ CI vẫn cần được cài và xác nhận kèm ảnh chụp cùng phiên bản firmware trước khi chuyển kênh stable."
 }

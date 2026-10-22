@@ -113,6 +113,7 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 - Nhiệt độ 3 chữ số, hỗ trợ giá trị âm (`-5`, `-10`, `-20`); đơn vị `°C` canh giữa theo chiều dọc với giá trị.
 - Bỏ hoàn toàn vòng MỤC TIÊU, giá trị phần trăm và source `1021`; không còn cụm bánh răng/thanh đế phía dưới.
 - Toàn bộ nội dung nằm trong vùng an toàn của màn hình bo góc bán kính 82 px; không đặt chữ/số sát bốn góc.
+- Ảnh thu nhỏ trong danh sách chọn mặt dùng background tĩnh để tránh lỗi reboot của preview tổng hợp trên firmware hiện tại; ảnh xem trước phát hành vẫn hiển thị đầy đủ thiết kế.
 - Build tự động, kiểm tra cấu trúc nhị phân, checksum SHA-256 và GitHub Actions.
 
 ## Ảnh xem trước

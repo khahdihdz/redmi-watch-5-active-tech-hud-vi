@@ -6,6 +6,8 @@ Mặt đồng hồ tuỳ chỉnh phong cách **steampunk / brass**, giao diện 
 
 > Ảnh xem trước dùng **số liệu minh họa**. Trên đồng hồ, các giá trị lấy từ cảm biến và ứng dụng điện thoại đã kết nối.
 
+> **Ghi chú v1.1.4:** ảnh thu nhỏ trong danh sách chọn mặt trên đồng hồ dùng chính background tĩnh, không có số/chữ. Bản preview tổng hợp đầy đủ của v1.1.3 gây reboot trên thiết bị thật; ảnh xem trước phát hành (`design/preview.png`) vẫn hiển thị đầy đủ thiết kế.
+
 ---
 
 ## 1. Giới thiệu
@@ -50,10 +52,10 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 | Compiler | Mi Create `compile.exe`, pin commit + SHA-256 |
 | Build on CI | GitHub Actions `windows-2022` |
 | Kiểm tra cấu trúc `.bin` | Có, tự động |
-| **Kiểm thử trên máy thật** | **Chưa thực hiện** |
+| **Kiểm thử trên máy thật** | **Chẩn đoán đã chạy; bản phát hành v1.1.4 chưa xác nhận** |
 | Kênh phát hành | **Pre-release** cho tới khi có xác nhận thiết bị |
 
-> Chưa có bằng chứng cài đặt và hiển thị trên Redmi Watch 5 Active thật. Vì vậy mọi release hiện tại là **pre-release**. Xem [docs/device-test.md](docs/device-test.md) để biết cách xác nhận.
+> Các binary chẩn đoán đã được thử trên Redmi Watch 5 Active thật: toạ độ mới an toàn, background v1.1.3 an toàn, preview tổng hợp v1.1.3 gây reboot. Bản `tech-hud-vi.bin` v1.1.4 build từ CI vẫn cần được cài và xác nhận. Vì vậy release hiện tại là **pre-release**. Xem [docs/device-test.md](docs/device-test.md) để biết cách xác nhận.
 
 ### Vì sao không có ô KM?
 
@@ -123,7 +125,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.1.3
+python3 scripts/package_release.py --version v1.1.4
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -193,8 +195,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.1.3
-git push origin v1.1.3
+git tag v1.1.4
+git push origin v1.1.4
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.

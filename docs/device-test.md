@@ -1,6 +1,8 @@
 # Kiểm thử trên thiết bị thật
 
-Trạng thái hiện tại: **CHƯA THỰC HIỆN**.
+Trạng thái hiện tại: **CHƯA XÁC NHẬN BẢN PHÁT HÀNH**.
+
+Đã có bằng chứng chẩn đoán trên thiết bị thật cho các binary vá cục bộ: toạ độ v1.1.3 an toàn, background v1.1.3 an toàn, preview v1.1.3 gây reboot. Cấu hình v1.1.4 dùng background làm preview nội bộ cũng đã chạy trên thiết bị khi kiểm thử cục bộ (`diag-E`). Tuy nhiên bản `tech-hud-vi.bin` phát hành từ CI vẫn cần được cài và xác nhận lại trước khi chuyển kênh stable.
 
 Repo chỉ cho phép phát hành **stable** khi `tests/device_verification.json` có `"verified": true`. Đây là cổng bắt buộc, không phải gợi ý.
 
