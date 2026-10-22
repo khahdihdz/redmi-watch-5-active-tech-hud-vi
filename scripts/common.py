@@ -41,6 +41,46 @@ def mix(a: tuple[int, int, int], b: tuple[int, int, int], t: float) -> tuple[int
     return tuple(round(x + (y - x) * t) for x, y in zip(a, b))
 
 
+def fits_rounded_display(
+    x: float,
+    y: float,
+    width: float,
+    height: float,
+    canvas_width: int,
+    canvas_height: int,
+    radius: float,
+) -> bool:
+    """Return True when every corner of a box is inside a rounded rectangle.
+
+    The watch display is a 320×385 rectangle with an 82 px corner radius.
+    Checking only a rectangular safe inset is not enough: a label near a
+    corner can be inside the canvas but still hidden by the bezel.  The
+    rounded rectangle is convex, so testing all four box corners is enough
+    for an axis-aligned box.
+    """
+    if x < 0 or y < 0 or x + width > canvas_width or y + height > canvas_height:
+        return False
+    corners = ((x, y), (x + width, y), (x, y + height), (x + width, y + height))
+    left = radius
+    right = canvas_width - radius
+    top = radius
+    bottom = canvas_height - radius
+    for px, py in corners:
+        if px < left and py < top:
+            if (px - left) ** 2 + (py - top) ** 2 > radius**2:
+                return False
+        elif px > right and py < top:
+            if (px - right) ** 2 + (py - top) ** 2 > radius**2:
+                return False
+        elif px < left and py > bottom:
+            if (px - left) ** 2 + (py - bottom) ** 2 > radius**2:
+                return False
+        elif px > right and py > bottom:
+            if (px - right) ** 2 + (py - bottom) ** 2 > radius**2:
+                return False
+    return True
+
+
 def font_path(layout: dict, name: str) -> Path:
     return ROOT / layout["meta"]["fonts"][name]
 

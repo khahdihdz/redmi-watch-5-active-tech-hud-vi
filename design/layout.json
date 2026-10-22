@@ -2,7 +2,7 @@
   "meta": {
     "name": "Tech HUD VI",
     "title": "Tech HUD VI",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "device": "Redmi Watch 5 Active",
     "device_type": "3651",
     "canvas": {
@@ -20,10 +20,6 @@
       "THỨ NĂM",
       "THỨ SÁU",
       "THỨ BẢY"
-    ],
-    "connection_labels": [
-      "MẤT KẾT NỐI",
-      "ĐÃ KẾT NỐI"
     ],
     "colors": {
       "bg": "#000000",
@@ -58,15 +54,15 @@
       "heart": 72,
       "calories": 412,
       "temp": 28,
-      "goal": 86,
-      "connected": 1
-    }
+      "goal": 86
+    },
+    "corner_radius": 82
   },
   "labels": [
     {
       "id": "brand",
       "text": "TECH HUD",
-      "x": 14,
+      "x": 54,
       "y": 8,
       "font": "label",
       "size": 9,
@@ -77,17 +73,17 @@
     {
       "id": "battery_pct",
       "text": "%",
-      "x": 298,
+      "x": 258,
       "y": 8,
       "font": "label",
       "size": 9,
       "color": "cyan",
-      "max_width": 14
+      "max_width": 8
     },
     {
       "id": "date_sep",
       "text": "/",
-      "x": 270,
+      "x": 262,
       "y": 26,
       "font": "label",
       "size": 14,
@@ -151,25 +147,14 @@
     {
       "id": "goal_label",
       "text": "MỤC TIÊU",
-      "x": 62,
-      "y": 352,
+      "x": 160,
+      "y": 354,
       "font": "label",
       "size": 8,
       "color": "muted",
       "tracking": 0.8,
       "anchor": "ma",
       "max_width": 86
-    },
-    {
-      "id": "status_label",
-      "text": "TRẠNG THÁI",
-      "x": 130,
-      "y": 278,
-      "font": "label",
-      "size": 9,
-      "color": "muted",
-      "tracking": 1.2,
-      "max_width": 100
     }
   ],
   "panels": [
@@ -204,21 +189,13 @@
       "w": 146,
       "h": 46,
       "accent": "blue"
-    },
-    {
-      "id": "status",
-      "x": 118,
-      "y": 262,
-      "w": 192,
-      "h": 86,
-      "accent": "green"
     }
   ],
   "icons": [
     {
       "id": "battery",
       "kind": "battery",
-      "x": 240,
+      "x": 202,
       "y": 8,
       "w": 20,
       "h": 12,
@@ -265,7 +242,7 @@
     {
       "id": "weekday",
       "kind": "imagelist",
-      "x": 14,
+      "x": 54,
       "y": 21,
       "w": 110,
       "h": 26,
@@ -285,7 +262,7 @@
     {
       "id": "day",
       "kind": "dignum",
-      "x": 246,
+      "x": 238,
       "y": 24,
       "w": 20,
       "h": 24,
@@ -300,7 +277,7 @@
     {
       "id": "month",
       "kind": "dignum",
-      "x": 280,
+      "x": 272,
       "y": 24,
       "w": 20,
       "h": 24,
@@ -315,7 +292,7 @@
     {
       "id": "battery",
       "kind": "dignum",
-      "x": 266,
+      "x": 226,
       "y": 6,
       "w": 30,
       "h": 24,
@@ -450,8 +427,8 @@
     {
       "id": "goal_ring",
       "kind": "imagelist",
-      "x": 18,
-      "y": 256,
+      "x": 116,
+      "y": 258,
       "w": 88,
       "h": 88,
       "source": "1021",
@@ -507,8 +484,8 @@
     {
       "id": "goal_value",
       "kind": "dignum",
-      "x": 38,
-      "y": 303,
+      "x": 142,
+      "y": 305,
       "w": 36,
       "h": 20,
       "source": "1021",
@@ -518,27 +495,11 @@
       "align": 0,
       "image": "digit_pct",
       "preview": "86"
-    },
-    {
-      "id": "status",
-      "kind": "imagelist",
-      "x": 128,
-      "y": 302,
-      "w": 168,
-      "h": 26,
-      "source": "2041",
-      "default": 0,
-      "images": [
-        "conn_0",
-        "conn_1"
-      ],
-      "preview": 1
     }
   ],
   "notes": {
     "distance": "Redmi Watch 5 Active (DeviceType 3651) không công bố nguồn dữ liệu quãng đường trong danh sách source của Mi Create; dự án không hiển thị KM để tránh dữ liệu giả.",
     "weather": "Ô NHIỆT ĐỘ dùng source 2031 (Weather temp C) do ứng dụng điện thoại cung cấp.",
-    "connection": "Panel TRẠNG THÁI dùng source 2041 (BT connection status), không phải trạng thái mô phỏng.",
     "goal": "Vòng MỤC TIÊU dùng source 1021 (phần trăm mục tiêu bước chân), 21 mức 5%."
   }
 }

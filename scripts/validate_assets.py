@@ -18,6 +18,7 @@ from common import (  # noqa: E402
     PREVIEW_RAW_PATH,
     ROOT,
     SRC_IMAGES,
+    fits_rounded_display,
     hex_rgb,
     load_font_cmap,
     load_layout,
@@ -68,11 +69,10 @@ def main() -> int:
 
     # ---- fonts / Vietnamese coverage -------------------------------------------------
     weekdays = meta["weekdays"]
-    connection = meta["connection_labels"]
     required_chars = set(VIETNAMESE)
     for label in layout["labels"]:
         required_chars |= set(label["text"])
-    for text in weekdays + connection:
+    for text in weekdays:
         required_chars |= set(text)
     for font_name in ("label", "label_medium", "label_regular"):
         cmap = load_font_cmap(ROOT / meta["fonts"][font_name])
@@ -120,6 +120,29 @@ def main() -> int:
     check(goal["y"] >= ring["y"] + ring["h"] + 4, "goal_label is too close to the goal ring")
     check(goal["y"] + goal["size"] <= H - 16, "goal_label is too close to the bottom edge")
 
+    # ---- rounded display safety ------------------------------------------------------
+    radius = meta["corner_radius"]
+    for panel in layout["panels"]:
+        check(
+            fits_rounded_display(panel["x"], panel["y"], panel["w"], panel["h"], W, H, radius),
+            f"panel {panel['id']} enters the rounded corner",
+        )
+    for icon in layout["icons"]:
+        check(
+            fits_rounded_display(icon["x"], icon["y"], icon["w"], icon["h"], W, H, radius),
+            f"icon {icon['id']} enters the rounded corner",
+        )
+    for widget in layout["widgets"]:
+        check(
+            fits_rounded_display(widget["x"], widget["y"], widget["w"], widget["h"], W, H, radius),
+            f"widget {widget['id']} enters the rounded corner",
+        )
+    for label_id, x0, y0, x1, y1 in label_boxes:
+        check(
+            fits_rounded_display(x0, y0, x1 - x0, y1 - y0 + 4, W, H, radius),
+            f"label {label_id} enters the rounded corner",
+        )
+
     # ---- canvas assets ---------------------------------------------------------------
     background = verify_png(BACKGROUND_PATH)
     check(background.size == (W, H), f"background is {background.size}, expected {(W, H)}")
@@ -148,8 +171,6 @@ def main() -> int:
         expected[f"{prefix}_minus"] = size
     for index in range(7):
         expected[f"weekday_{index}"] = (110, 26)
-    for index in range(2):
-        expected[f"conn_{index}"] = (168, 26)
     for pct in range(0, 101, 5):
         expected[f"ring_{pct:02d}"] = (88, 88)
 
@@ -162,7 +183,7 @@ def main() -> int:
             continue
         image = verify_png(path)
         check(image.size == size, f"{name}.png is {image.size}, expected {size}")
-        if name.startswith("digit_") or name.startswith("ring_") or name.startswith("weekday_") or name.startswith("conn_"):
+        if name.startswith("digit_") or name.startswith("ring_") or name.startswith("weekday_"):
             check(image.getchannel("A").getextrema()[0] == 0, f"{name}.png background is not transparent")
             check(image.getchannel("A").getextrema()[1] > 40, f"{name}.png has no visible ink")
         if name.startswith("ring_"):

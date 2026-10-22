@@ -94,6 +94,8 @@ def main() -> int:
         errors.append(f"device_type is {meta['device_type']!r}, expected 3651")
     if meta["canvas"] != {"w": DEVICE["width"], "h": DEVICE["height"]}:
         errors.append(f"canvas is {meta['canvas']}, expected 320x385")
+    if meta.get("corner_radius") != DEVICE["corner_radius"]:
+        errors.append(f"corner_radius is {meta.get('corner_radius')!r}, expected {DEVICE['corner_radius']}")
     if meta["colors"] != PALETTE:
         errors.append("palette does not match the locked Tech HUD palette")
 

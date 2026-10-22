@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from xml.sax.saxutils import quoteattr
 
-from PIL import Image, ImageChops, ImageDraw, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import (  # noqa: E402
@@ -167,22 +167,13 @@ def build_background() -> Image.Image:
     draw.line([(sc(10), sc(48)), (sc(W - 10), sc(48))], fill=blue + (85,), width=sc(1))
     draw.line([(sc(10), sc(48)), (sc(64), sc(48))], fill=orange + (200,), width=sc(1))
 
-    # corner brackets
-    inset, arm = META["safe_inset"], 22
-    bracket = cyan + (190,)
-    corners = [
-        [(inset, inset + arm), (inset, inset), (inset + arm, inset)],
-        [(W - inset - arm, inset), (W - inset, inset), (W - inset, inset + arm)],
-        [(inset, H - inset - arm), (inset, H - inset), (inset + arm, H - inset)],
-        [(W - inset - arm, H - inset), (W - inset, H - inset), (W - inset, H - inset - arm)],
-    ]
-    for pts in corners:
-        draw.line([(sc(px), sc(py)) for px, py in pts], fill=bracket, width=sc(1.4))
-
-    # segmented tick ruler at the very edges
+    # The display has an 82 px corner radius.  L-shaped brackets at the old
+    # 8 px inset were outside the visible area on the real watch, so the HUD
+    # frame is now carried by the panels and the rounded edges themselves.
+    # Keep the tick ruler inside the corner arcs.
     for ty in range(58, H - 28, 24):
-        draw.line([(sc(4), sc(ty)), (sc(7), sc(ty))], fill=muted + (70,), width=sc(1))
-        draw.line([(sc(W - 7), sc(ty + 12)), (sc(W - 4), sc(ty + 12))], fill=muted + (70,), width=sc(1))
+        draw.line([(sc(14), sc(ty)), (sc(17), sc(ty))], fill=muted + (70,), width=sc(1))
+        draw.line([(sc(W - 17), sc(ty + 12)), (sc(W - 14), sc(ty + 12))], fill=muted + (70,), width=sc(1))
 
     # soft cyan glow behind the clock
     glow, gdraw = new_layer(W, 150)
@@ -336,24 +327,6 @@ def build_weekdays() -> list[Path]:
     return paths
 
 
-def build_connection() -> list[Path]:
-    variants = [
-        (META["connection_labels"][0], "red"),
-        (META["connection_labels"][1], "green"),
-    ]
-    paths = []
-    for index, (text, colour) in enumerate(variants):
-        layer, draw = new_layer(168, 26)
-        rgb = hex_rgb(COLORS[colour])
-        draw.rectangle([sc(0), sc(2), sc(3), sc(24)], fill=rgb + (220,))
-        font = fit_font("label", text, 19, 150, 1.2)
-        draw_text(draw, (12, 3), text, font, rgb + (255,), 1.2)
-        path = SRC_IMAGES / f"conn_{index}.png"
-        save_png(downsample(layer, (168, 26)), path)
-        paths.append(path)
-    return paths
-
-
 def build_rings() -> list[Path]:
     paths = []
     size = (88, 88)
@@ -424,22 +397,43 @@ def build_captioned_preview(raw: Image.Image) -> Image.Image:
     height = H * scale + caption_h + margin_top
     out = Image.new("RGBA", (width, height), (0, 0, 0, 255))
     draw = ImageDraw.Draw(out, "RGBA")
-    # thin HUD frame around the watch render
+
+    # The real display is a rounded rectangle (radius 82 at 1x).  Mask the
+    # preview so clipped content is visible before installing and the image
+    # matches what the watch can actually show.
+    radius = int(META.get("corner_radius", 82)) * scale
+    watch = raw.resize((W * scale, H * scale), Image.LANCZOS)
+    mask = Image.new("L", watch.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, watch.width - 1, watch.height - 1], radius=radius, fill=255)
+    out.paste(watch, (0, margin_top), mask)
+
+    # thin HUD frame follows the rounded display edge
     frame = hex_rgb(COLORS["cyan"]) + (90,)
-    draw.rectangle([0, margin_top, width - 1, margin_top + H * scale - 1], outline=frame, width=1)
-    out.alpha_composite(raw.resize((W * scale, H * scale), Image.LANCZOS), (0, margin_top))
-    font = load_font(LAYOUT, "label", 10)
-    small = load_font(LAYOUT, "label_medium", 8)
+    draw.rounded_rectangle(
+        [0, margin_top, width - 1, margin_top + H * scale - 1],
+        radius=radius,
+        outline=frame,
+        width=1,
+    )
+
+    # Caption is drawn at 2x directly: draw_text() works in 1x design pixels
+    # multiplied by SS, which would put it outside this 2x canvas.
+    font = ImageFont.truetype(str(font_path(LAYOUT, "label")), 20)
+    small = ImageFont.truetype(str(font_path(LAYOUT, "label_medium")), 16)
     note = META["preview_note"]
-    draw_text(draw, (width / 2, margin_top + H * scale + 14), note, font, hex_rgb(COLORS["muted"]) + (255,), 1.0, "ma")
-    draw_text(
-        draw,
-        (width / 2, margin_top + H * scale + 36),
+    draw.text(
+        (width / 2, margin_top + H * scale + 8),
+        note,
+        font=font,
+        fill=hex_rgb(COLORS["muted"]) + (255,),
+        anchor="ma",
+    )
+    draw.text(
+        (width / 2, margin_top + H * scale + 32),
         "Redmi Watch 5 Active · 320×385 · Tech HUD VI",
-        small,
-        hex_rgb(COLORS["cyan"]) + (210,),
-        0.4,
-        "ma",
+        font=small,
+        fill=hex_rgb(COLORS["cyan"]) + (210,),
+        anchor="ma",
     )
     return out
 
@@ -498,7 +492,6 @@ def main() -> int:
 
     build_digits()
     build_weekdays()
-    build_connection()
     build_rings()
 
     assets: dict[str, Image.Image] = {}

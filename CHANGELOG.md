@@ -2,6 +2,20 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.0.3] — 2026-10-22
+
+### Thay đổi
+
+- Bỏ panel, nhãn **TRẠNG THÁI**, widget kết nối và toàn bộ bitmap `conn_*`; không còn dùng source `2041`.
+- Căn giữa vòng **MỤC TIÊU** và nhãn dưới vòng; khoảng trống hai bên được giữ sạch, không đặt nội dung sát góc.
+- Dời brand, thứ, pin và ngày vào vùng an toàn; bỏ các khung góc L bị che bởi bo góc; thu gọn thước tick hai bên.
+- Thêm kiểm tra tự động: panel, icon, widget và nhãn phải nằm trong hình chữ nhật bo góc bán kính **82 px**.
+- Preview được mask theo đúng bo góc và hiển thị chú thích ảnh minh họa.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.0.2] — 2026-10-21
 
 ### Thay đổi

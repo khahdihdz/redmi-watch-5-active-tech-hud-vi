@@ -59,6 +59,8 @@ Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_comp
 - Be Vietnam Pro là font tỉ lệ, nên mỗi bộ số 0–9 dùng **một cỡ chữ chung**; nếu fit từng glyph riêng, số `1` sẽ cao hơn `0`/`8`.
 - Orbitron không còn được dùng để render kể từ v1.0.2.
 - Preview và fprj dùng cùng một bộ bitmap, nên không có sai lệch giữa ảnh xem trước và mặt đồng hồ.
+- Màn hình có bán kính bo góc **82 px**. `validate_assets.py` kiểm tra bốn góc của mọi panel, icon, widget và nhãn nằm trong hình chữ nhật bo góc; preview cũng được mask theo đúng bán kính này.
+- Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU được căn giữa vùng đáy.
 
 ## 5. Dữ liệu
 
@@ -67,7 +69,7 @@ Source list cho `redmi_watch_5_active` trong `Mi-Create/src/data/sources.json` c
 - `0811/0911/1000911` giờ
 - `1011/1111/1211` phút
 - `1812` ngày, `1012` tháng, `2012` thứ
-- `0841` pin, `2041` Bluetooth
+- `0841` pin
 - `0821` bước, `1021` % mục tiêu bước
 - `0822` nhịp tim, `0823` calo
 - `2031` nhiệt độ

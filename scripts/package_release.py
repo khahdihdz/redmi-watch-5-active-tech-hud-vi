@@ -91,6 +91,7 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
     preview_url = f"{server}/{repo}/releases/download/{version}/{ARTIFACT}-preview.png"
     table = "\n".join(f"| `{name}` | `{digest}` |" for name, digest in checksums)
     files = "\n".join(f"- `{name}`" for name, _ in checksums)
+    files += "\n- `SHA256SUMS.txt`"
     text = f"""# Redmi Watch 5 Active Tech HUD VI {version}
 
 - **Phiên bản:** {version}
@@ -103,11 +104,11 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 
 - Giao diện Tech HUD tiếng Việt có dấu, tối ưu màn hình 320×385.
 - Toàn bộ nhãn và chữ số dùng **Be Vietnam Pro**; bộ số 0–9 dùng chung một cỡ chữ để cao bằng nhau.
-- Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL và chấm trạng thái trùng.
+- Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL, panel trạng thái và chấm trạng thái trùng.
 - Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
 - Bốn panel dữ liệu: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.
-- Vòng MỤC TIÊU 21 mức (5% mỗi mức) lấy từ phần trăm mục tiêu bước chân; nhãn không còn bị vạch trang trí đè.
-- Panel TRẠNG THÁI hiển thị **ĐÃ KẾT NỐI** / **MẤT KẾT NỐI** từ Bluetooth thực tế.
+- Vòng MỤC TIÊU 21 mức (5% mỗi mức) lấy từ phần trăm mục tiêu bước chân, căn giữa; nhãn không bị vạch trang trí đè.
+- Toàn bộ nội dung nằm trong vùng an toàn của màn hình bo góc bán kính 82 px; không đặt chữ/số sát bốn góc.
 - Build tự động, kiểm tra cấu trúc nhị phân, checksum SHA-256 và GitHub Actions.
 
 ## Ảnh xem trước
