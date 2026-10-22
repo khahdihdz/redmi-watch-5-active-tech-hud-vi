@@ -13,7 +13,7 @@ Mặt đồng hồ tuỳ chỉnh phong cách **steampunk / brass**, giao diện 
 Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen2, không phải mockup:
 
 - Đồng hồ số `HH:MM` dùng **DSEG7 Classic Bold** bảy đoạn, màu amber, đặt trong khung đồng (brass) có đinh tán.
-- Bố cục steampunk: nền da/gunmetal, bánh răng đồng, ống dẫn và bốn dải panel viền brass.
+- Bố cục steampunk: nền da/gunmetal, bánh răng đồng, ống dẫn; đồng hồ ở trung tâm, hai panel trên và hai panel dưới bao quanh.
 - Nhãn và số liệu dùng **Lora** (serif, OFL) có đủ dấu tiếng Việt; số giờ:phút dùng DSEG7.
 - Bố cục tối giản: chỉ giữ dữ liệu cần thiết, không footer tên máy, không mã phiên bản, không nhãn đơn vị lặp, không panel trạng thái.
 - Nội dung được căn vào vùng an toàn của màn hình bo góc bán kính **82 px**; không đặt chữ/số sát bốn góc.
@@ -57,7 +57,7 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 
 ### Vì sao không có ô KM?
 
-Danh sách data source cho `redmi_watch_5_active` trong Mi Create **không có** nguồn quãng đường. Định dạng này cũng không cho phép tính toán trên thiết bị. Dự án **không** hiển thị KM giả và không suy ra quãng đường từ số bước. Bố cục dùng bốn dải panel: **BƯỚC, TIM, CALO, NHIỆT ĐỘ**.
+Danh sách data source cho `redmi_watch_5_active` trong Mi Create **không có** nguồn quãng đường. Định dạng này cũng không cho phép tính toán trên thiết bị. Dự án **không** hiển thị KM giả và không suy ra quãng đường từ số bước. Bố cục đặt đồng hồ ở trung tâm, với bốn panel **BƯỚC, TIM, CALO, NHIỆT ĐỘ** bao quanh.
 
 ### Nguồn dữ liệu thực tế
 
@@ -123,7 +123,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.1.2
+python3 scripts/package_release.py --version v1.1.3
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -193,8 +193,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.1.2
-git push origin v1.1.2
+git tag v1.1.3
+git push origin v1.1.3
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.

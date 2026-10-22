@@ -112,6 +112,28 @@ def test_goal_section_is_removed():
     assert "1021" not in {widget["source"] for widget in LAYOUT["widgets"]}
 
 
+def test_clock_is_centered_and_time_widgets_are_inside_it():
+    clock = LAYOUT["clock"]
+    assert abs(clock["x"] + clock["w"] / 2 - 160) <= 1
+    assert abs(clock["y"] + clock["h"] / 2 - 192.5) <= 1
+    time_ids = {"hour_high", "hour_low", "minute_high", "minute_low"}
+    for widget in LAYOUT["widgets"]:
+        if widget["id"] not in time_ids:
+            continue
+        assert widget["x"] >= clock["x"]
+        assert widget["y"] >= clock["y"]
+        assert widget["x"] + widget["w"] <= clock["x"] + clock["w"]
+        assert widget["y"] + widget["h"] <= clock["y"] + clock["h"]
+
+
+def test_two_panels_above_and_two_below_clock():
+    clock = LAYOUT["clock"]
+    top = [panel for panel in LAYOUT["panels"] if panel["y"] + panel["h"] <= clock["y"]]
+    bottom = [panel for panel in LAYOUT["panels"] if panel["y"] >= clock["y"] + clock["h"]]
+    assert {panel["id"] for panel in top} == {"steps", "heart"}
+    assert {panel["id"] for panel in bottom} == {"calories", "temp"}
+
+
 def test_content_fits_rounded_display():
     meta = LAYOUT["meta"]
     width, height = meta["canvas"]["w"], meta["canvas"]["h"]

@@ -207,7 +207,8 @@ def draw_pipe(draw: ImageDraw.ImageDraw, points: list[tuple[float, float]], colo
 
 
 def draw_clock_frame(draw: ImageDraw.ImageDraw) -> None:
-    x, y, w, h = 10, 52, 300, 96
+    clock = LAYOUT["clock"]
+    x, y, w, h = clock["x"], clock["y"], clock["w"], clock["h"]
     panel = hex_rgb(COLORS["panel"])
     border = hex_rgb(COLORS["brass_dark"])
     brass = hex_rgb(COLORS["brass"])
@@ -285,24 +286,30 @@ def build_background() -> Image.Image:
     draw_clock_frame(draw)
 
     # amber lamp glow inside the clock window
+    clock = LAYOUT["clock"]
     glow, gdraw = new_layer(W, 150)
-    gdraw.ellipse([sc(24), sc(58), sc(W - 24), sc(142)], fill=amber + (40,))
+    gdraw.ellipse(
+        [
+            sc(clock["x"] + 14),
+            sc(clock["y"] + 6),
+            sc(clock["x"] + clock["w"] - 14),
+            sc(clock["y"] + clock["h"] - 6),
+        ],
+        fill=amber + (40,),
+    )
     glow = glow.filter(ImageFilter.GaussianBlur(sc(20)))
     image.alpha_composite(glow)
 
     # brass-rimmed amber colon lenses
-    for cy in (78, 112):
+    colon_x = clock["x"] + clock["w"] // 2
+    for cy in (clock["y"] + 26, clock["y"] + 60):
         draw.ellipse(
-            [sc(154), sc(cy - 1), sc(166), sc(cy + 13)],
+            [sc(colon_x - 6), sc(cy - 1), sc(colon_x + 6), sc(cy + 13)],
             fill=hex_rgb(COLORS["brass_dark"]) + (255,),
             outline=brass + (255,),
             width=sc(1),
         )
-        draw.ellipse([sc(157), sc(cy + 2), sc(163), sc(cy + 10)], fill=amber + (255,))
-
-    # brass rails under the clock
-    draw.line([(sc(34), sc(148)), (sc(148), sc(148))], fill=brass + (120,), width=sc(1))
-    draw.line([(sc(172), sc(148)), (sc(286), sc(148))], fill=brass + (120,), width=sc(1))
+        draw.ellipse([sc(colon_x - 3), sc(cy + 2), sc(colon_x + 3), sc(cy + 10)], fill=amber + (255,))
 
     # panels
     for panel in LAYOUT["panels"]:

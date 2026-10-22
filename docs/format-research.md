@@ -62,7 +62,7 @@ Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_comp
 - Be Vietnam Pro và Orbitron không còn được dùng để render kể từ v1.1.0.
 - Preview và fprj dùng cùng một bộ bitmap, nên không có sai lệch giữa ảnh xem trước và mặt đồng hồ.
 - Màn hình có bán kính bo góc **82 px**. `validate_assets.py` kiểm tra bốn góc của mọi panel, icon, widget và nhãn nằm trong hình chữ nhật bo góc; preview cũng được mask theo đúng bán kính này.
-- Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU, giá trị phần trăm và source `1021` đã được bỏ từ v1.1.1. Bốn panel dữ liệu được xếp thành bốn dải brass full-width; v1.1.2 căn thẳng hàng nội dung và hỗ trợ nhiệt độ âm.
+- Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU, giá trị phần trăm và source `1021` đã được bỏ từ v1.1.1. Bốn panel dữ liệu được đặt quanh đồng hồ trung tâm từ v1.1.3; v1.1.2 căn thẳng hàng nội dung và hỗ trợ nhiệt độ âm.
 - Từ v1.0.4, `draw_text()` vẽ từng ký tự bằng anchor `ls` trên một baseline chung (lấy từ cap height của `H`). Trước đó anchor `lt` căn theo đỉnh từng glyph nên chữ có dấu tiếng Việt bị tụt xuống so với chữ không dấu.
 
 ## 5. Dữ liệu

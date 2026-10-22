@@ -119,6 +119,24 @@ def main() -> int:
             ):
                 errors.append(f"labels overlap: {first[0]} and {second[0]}")
 
+    # ---- main clock and surrounding content ------------------------------------------
+    clock = layout.get("clock")
+    check(isinstance(clock, dict), "layout has no clock frame")
+    if isinstance(clock, dict):
+        check(abs(clock["x"] + clock["w"] / 2 - W / 2) <= 1, "clock is not horizontally centred")
+        check(abs(clock["y"] + clock["h"] / 2 - H / 2) <= 1, "clock is not vertically centred")
+        time_ids = {"hour_high", "hour_low", "minute_high", "minute_low"}
+        for widget in layout["widgets"]:
+            if widget["id"] not in time_ids:
+                continue
+            check(widget["x"] >= clock["x"], f"{widget['id']} leaves the clock frame on the left")
+            check(widget["y"] >= clock["y"], f"{widget['id']} leaves the clock frame at the top")
+            check(widget["x"] + widget["w"] <= clock["x"] + clock["w"], f"{widget['id']} leaves the clock frame on the right")
+            check(widget["y"] + widget["h"] <= clock["y"] + clock["h"], f"{widget['id']} leaves the clock frame at the bottom")
+        top = [panel for panel in layout["panels"] if panel["y"] + panel["h"] <= clock["y"]]
+        bottom = [panel for panel in layout["panels"] if panel["y"] >= clock["y"] + clock["h"]]
+        check(len(top) == 2 and len(bottom) == 2, "expected two panels above and two below the clock")
+
     # ---- rounded display safety ------------------------------------------------------
     radius = meta["corner_radius"]
     for panel in layout["panels"]:

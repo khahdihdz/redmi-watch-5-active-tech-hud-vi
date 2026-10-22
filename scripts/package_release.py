@@ -106,10 +106,10 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 - Đồng hồ `HH:MM` dùng **DSEG7 Classic Bold** bảy đoạn màu amber trong khung đồng có đinh tán.
 - Nhãn và số liệu dùng **Lora** serif (OFL); Lora có đủ glyph tiếng Việt, DSEG7 chỉ dùng cho chữ số giờ:phút.
 - Các số bảy đoạn `1`/`4` được căn đáy chung với `0`/`8`, không bị lệch dòng.
-- Nền da/gunmetal, bánh răng đồng, ống dẫn và bốn dải panel viền brass.
+- Nền da/gunmetal, bánh răng đồng, ống dẫn; đồng hồ ở trung tâm, hai panel trên và hai panel dưới bao quanh.
 - Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL, panel trạng thái và chấm trạng thái trùng.
 - Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
-- Bốn dải dữ liệu full-width: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.
+- Bốn panel dữ liệu quanh đồng hồ: **BƯỚC, TIM** phía trên; **CALO, NHIỆT ĐỘ** phía dưới; vùng số rộng hơn để không tràn.
 - Nhiệt độ 3 chữ số, hỗ trợ giá trị âm (`-5`, `-10`, `-20`); đơn vị `°C` canh giữa theo chiều dọc với giá trị.
 - Bỏ hoàn toàn vòng MỤC TIÊU, giá trị phần trăm và source `1021`; không còn cụm bánh răng/thanh đế phía dưới.
 - Toàn bộ nội dung nằm trong vùng an toàn của màn hình bo góc bán kính 82 px; không đặt chữ/số sát bốn góc.

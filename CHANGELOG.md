@@ -2,6 +2,20 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.1.3] — 2026-10-22
+
+### Thay đổi
+
+- Đưa khung đồng hồ **DSEG7 vào đúng trung tâm** màn hình 320×385; header thứ/ngày/pin nằm phía trên.
+- Bố trí hai panel **BƯỚC, TIM** phía trên và hai panel **CALO, NHIỆT ĐỘ** phía dưới, bao quanh đồng hồ.
+- Cập nhật nền, quầng sáng và hai thấu kính dấu `:` theo tọa độ khung đồng hồ mới; bỏ thanh ray cũ dưới đồng hồ.
+- Thêm kiểm tra khung đồng hồ căn giữa, widget giờ:phút nằm trong khung và bố cục 2 panel trên + 2 panel dưới.
+- Giữ nguyên việc bỏ **MỤC TIÊU** và hỗ trợ nhiệt độ âm từ các bản trước.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.1.2] — 2026-10-22
 
 ### Thay đổi
