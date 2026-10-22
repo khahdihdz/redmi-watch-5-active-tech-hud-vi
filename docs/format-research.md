@@ -55,9 +55,11 @@ Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_comp
 ## 4. Tiếng Việt
 
 - Định dạng `.fprj` không hỗ trợ nhúng font/text động; mọi widget là ảnh hoặc digit bitmap.
-- Vì vậy toàn bộ nhãn **và chữ số** được rasterize bằng **Be Vietnam Pro** (có đủ `ă â đ ê ô ơ ư` và các dấu thanh). Kiểm tra bằng `fontTools` cmap trong `validate_assets.py`.
-- Be Vietnam Pro là font tỉ lệ, nên mỗi bộ số 0–9 dùng **một cỡ chữ chung**; nếu fit từng glyph riêng, số `1` sẽ cao hơn `0`/`8`.
-- Orbitron không còn được dùng để render kể từ v1.0.2.
+- Từ v1.1.0, nhãn, số liệu và phần chữ trong preview dùng **Lora** (serif, OFL); riêng `HH:MM` dùng **DSEG7 Classic Bold** (bảy đoạn, OFL).
+- Lora có đủ `ă â đ ê ô ơ ư` và các dấu thanh; DSEG7 chỉ có chữ số nên dấu `:` được vẽ bằng hình học. `validate_assets.py` kiểm tra cmap của cả hai font bằng `fontTools`.
+- Lora là font tỉ lệ, nên mỗi bộ số 0–9 dùng **một cỡ chữ chung**; nếu fit từng glyph riêng, số `1` sẽ cao hơn `0`/`8`.
+- DSEG7 là font bảy đoạn: ink của `1`/`4` ngắn hơn `0`/`8`. Vì vậy `render_glyph()` căn **đáy** chung cho bộ `digit_time` thay vì căn giữa từng glyph; test `test_seven_segment_digits_share_one_baseline` bảo vệ quy tắc này.
+- Be Vietnam Pro và Orbitron không còn được dùng để render kể từ v1.1.0.
 - Preview và fprj dùng cùng một bộ bitmap, nên không có sai lệch giữa ảnh xem trước và mặt đồng hồ.
 - Màn hình có bán kính bo góc **82 px**. `validate_assets.py` kiểm tra bốn góc của mọi panel, icon, widget và nhãn nằm trong hình chữ nhật bo góc; preview cũng được mask theo đúng bán kính này.
 - Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU được căn giữa vùng đáy.

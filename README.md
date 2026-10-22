@@ -1,8 +1,8 @@
-# Redmi Watch 5 Active — Tech HUD VI
+# Redmi Watch 5 Active — Tech HUD VI: Brass
 
-Mặt đồng hồ tuỳ chỉnh phong cách **Tech HUD / cyberpunk**, giao diện tiếng Việt có dấu, dành riêng cho **Xiaomi Redmi Watch 5 Active** (320 × 385, DeviceType `3651`).
+Mặt đồng hồ tuỳ chỉnh phong cách **steampunk / brass**, giao diện tiếng Việt có dấu, dành riêng cho **Xiaomi Redmi Watch 5 Active** (320 × 385, DeviceType `3651`).
 
-![Ảnh xem trước Tech HUD VI](design/preview.png)
+![Ảnh xem trước Tech HUD VI: Brass](design/preview.png)
 
 > Ảnh xem trước dùng **số liệu minh họa**. Trên đồng hồ, các giá trị lấy từ cảm biến và ứng dụng điện thoại đã kết nối.
 
@@ -12,12 +12,13 @@ Mặt đồng hồ tuỳ chỉnh phong cách **Tech HUD / cyberpunk**, giao di�
 
 Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen2, không phải mockup:
 
-- Đồng hồ số `HH:MM` cỡ lớn, độ tương phản cao, có glow cyan tiết chế.
-- Khung HUD góc vát, đường mạch điện tử, panel thông số và vòng tiến độ.
+- Đồng hồ số `HH:MM` dùng **DSEG7 Classic Bold** bảy đoạn, màu amber, đặt trong khung đồng (brass) có đinh tán.
+- Bố cục steampunk: nền da/gunmetal, bánh răng đồng, ống dẫn, panel viền brass và vòng mục tiêu kiểu mặt số.
+- Nhãn và số liệu dùng **Lora** (serif, OFL) có đủ dấu tiếng Việt; số giờ:phút dùng DSEG7.
 - Bố cục tối giản: chỉ giữ dữ liệu cần thiết, không footer tên máy, không mã phiên bản, không nhãn đơn vị lặp, không panel trạng thái.
 - Nội dung được căn vào vùng an toàn của màn hình bo góc bán kính **82 px**; không đặt chữ/số sát bốn góc.
-- Toàn bộ nhãn và chữ số được **rasterize thành bitmap** bằng font **Be Vietnam Pro**, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
-- Chữ trong cùng một dòng dùng chung **baseline**; dấu tiếng Việt nằm phía trên nên thân chữ không bị nhô lên/thụt xuống.
+- Toàn bộ nhãn và chữ số được **rasterize thành bitmap**, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
+- Chữ trong cùng một dòng dùng chung **baseline**; các số DSEG7 có chiều cao khác nhau (1/4 so với 0/8) được căn đáy chung nên không lệch dòng.
 - Dữ liệu động lấy từ các source đã được tài liệu hoá cho đúng mẫu máy.
 - Build, kiểm tra, đóng gói và phát hành tự động bằng GitHub Actions.
 
@@ -25,14 +26,17 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 
 | Vai trò | Mã |
 |---|---|
-| Nền | `#000000` |
-| Cyan | `#00D9FF` |
-| Xanh điện | `#087EFF` |
-| Cam | `#FF6B00` |
-| Đỏ | `#FF3158` |
-| Xanh lá | `#32E69B` |
-| Chữ sáng | `#F5FAFF` |
-| Chữ phụ | `#7FA7CC` |
+| Nền chính | `#0B0806` |
+| Nền da/gunmetal | `#1B120B` |
+| Panel | `#17100B` |
+| Brass | `#C99A4B` |
+| Brass tối | `#6B4A23` |
+| Copper | `#B4633B` |
+| Amber | `#FFB24A` |
+| Kem / chữ sáng | `#F2E2C2` |
+| Chữ phụ | `#A88A5E` |
+| Patina | `#4F8B78` |
+| Đỏ | `#C45A45` |
 
 ---
 
@@ -120,7 +124,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.0.4
+python3 scripts/package_release.py --version v1.1.0
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -190,8 +194,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.0.4
-git push origin v1.0.4
+git tag v1.1.0
+git push origin v1.1.0
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.
@@ -226,9 +230,9 @@ grep tech-hud-vi.bin SHA256SUMS.txt
 .
 ├── assets/
 │   ├── backgrounds/        # background 320x385
-│   ├── fonts/              # Be Vietnam Pro (OFL)
+│   ├── fonts/              # Lora + DSEG7 (OFL), font cũ giữ làm tư liệu
 │   ├── icons/              # icon SVG nguồn
-│   ├── source/             # SVG khung HUD
+│   ├── source/             # SVG khung steampunk
 │   └── manifest.json       # hash của asset sinh ra
 ├── design/
 │   ├── layout.json         # nguồn thiết kế duy nhất
@@ -272,7 +276,9 @@ Chi tiết quyết định kỹ thuật: [docs/format-research.md](docs/format-r
 ## 10. Giấy phép
 
 - Mã nguồn, thiết kế, script: **MIT** — xem [LICENSE](LICENSE).
-- Font **Be Vietnam Pro**: SIL Open Font License 1.1, bản quyền thuộc tác giả font. Xem `assets/fonts/OFL-BeVietnamPro.txt`. File Orbitron còn trong thư mục font nhưng không còn được dùng để render kể từ v1.0.2.
+- Font **Lora**: SIL Open Font License 1.1 — nhãn, số liệu và phần chữ trong preview. Xem `assets/fonts/OFL-Lora.txt`.
+- Font **DSEG7 Classic**: SIL Open Font License 1.1 — chỉ dùng cho đồng hồ bảy đoạn. Xem `assets/fonts/OFL-DSEG.txt`.
+- **Be Vietnam Pro** và **Orbitron** vẫn nằm trong thư mục font làm tư liệu nhưng không còn được dùng để render từ v1.1.0.
 - Compiler `compile.exe`: công cụ bên thứ ba, **không** thuộc dự án và **không** được phân phối lại.
 
 Dự án không can thiệp bootloader, root, firmware hệ thống hoặc khai thác lỗ hổng bảo mật.

@@ -21,14 +21,18 @@ DEVICE = {
 }
 
 PALETTE = {
-    "bg": "#000000",
-    "cyan": "#00D9FF",
-    "blue": "#087EFF",
-    "orange": "#FF6B00",
-    "red": "#FF3158",
-    "green": "#32E69B",
-    "text": "#F5FAFF",
-    "muted": "#7FA7CC",
+    "bg": "#0B0806",
+    "bg2": "#1B120B",
+    "panel": "#17100B",
+    "brass": "#C99A4B",
+    "brass_dark": "#6B4A23",
+    "copper": "#B4633B",
+    "amber": "#FFB24A",
+    "cream": "#F2E2C2",
+    "text": "#F2E2C2",
+    "muted": "#A88A5E",
+    "patina": "#4F8B78",
+    "red": "#C45A45",
 }
 
 # Sources documented for redmi_watch_5_active by Mi Create's sources.json.

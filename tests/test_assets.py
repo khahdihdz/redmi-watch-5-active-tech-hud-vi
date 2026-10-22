@@ -12,8 +12,8 @@ from common import draw_text, load_font, load_layout, parse_number  # noqa: E402
 LAYOUT = load_layout()
 
 
-def test_digit_sets_share_one_height():
-    for prefix in ("digit_time", "digit_metric", "digit_small", "digit_batt", "digit_pct"):
+def test_text_digit_sets_share_one_height():
+    for prefix in ("digit_metric", "digit_small", "digit_batt", "digit_pct"):
         heights = []
         for digit in range(10):
             image = Image.open(ROOT / "src" / "watchface" / "images" / f"{prefix}_{digit}.png").convert("RGBA")
@@ -21,6 +21,16 @@ def test_digit_sets_share_one_height():
             assert bbox is not None, f"{prefix}_{digit} has no ink"
             heights.append(bbox[3] - bbox[1])
         assert max(heights) - min(heights) <= 2, f"{prefix} digit heights differ: {heights}"
+
+
+def test_seven_segment_digits_share_one_baseline():
+    bottoms = []
+    for digit in range(10):
+        image = Image.open(ROOT / "src" / "watchface" / "images" / f"digit_time_{digit}.png").convert("RGBA")
+        bbox = image.getchannel("A").getbbox()
+        assert bbox is not None, f"digit_time_{digit} has no ink"
+        bottoms.append(bbox[3])
+    assert max(bottoms) - min(bottoms) <= 2, f"digit_time bottoms differ: {bottoms}"
 
 
 def test_zero_value_keeps_one_digit():

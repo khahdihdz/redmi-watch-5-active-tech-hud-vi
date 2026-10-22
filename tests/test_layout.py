@@ -18,24 +18,29 @@ def test_target_and_canvas():
     assert meta["canvas"] == {"w": 320, "h": 385}
 
 
-def test_all_rendering_uses_be_vietnam_pro():
+def test_font_roles_are_steampunk_and_vietnamese():
     fonts = LAYOUT["meta"]["fonts"]
-    assert fonts["display"].endswith("BeVietnamPro-Bold.ttf")
+    assert fonts["clock"].endswith("DSEG7Classic-Bold.ttf")
+    assert "Lora" in fonts["display"]
     for label in LAYOUT["labels"]:
-        assert "BeVietnamPro" in fonts[label["font"]]
-    assert "Orbitron" not in json.dumps(LAYOUT, ensure_ascii=False)
+        assert "Lora" in fonts[label["font"]]
+    assert "BeVietnamPro" not in json.dumps(LAYOUT, ensure_ascii=False)
 
 
 def test_palette_is_locked():
     assert LAYOUT["meta"]["colors"] == {
-        "bg": "#000000",
-        "cyan": "#00D9FF",
-        "blue": "#087EFF",
-        "orange": "#FF6B00",
-        "red": "#FF3158",
-        "green": "#32E69B",
-        "text": "#F5FAFF",
-        "muted": "#7FA7CC",
+        "bg": "#0B0806",
+        "bg2": "#1B120B",
+        "panel": "#17100B",
+        "brass": "#C99A4B",
+        "brass_dark": "#6B4A23",
+        "copper": "#B4633B",
+        "amber": "#FFB24A",
+        "cream": "#F2E2C2",
+        "text": "#F2E2C2",
+        "muted": "#A88A5E",
+        "patina": "#4F8B78",
+        "red": "#C45A45",
     }
 
 

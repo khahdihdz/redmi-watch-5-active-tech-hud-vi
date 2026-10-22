@@ -2,8 +2,9 @@
 """Generate every bitmap, the .fprj project and the preview from design/layout.json.
 
 The script is deliberately deterministic: no timestamps, no randomness.
-All Vietnamese labels are rasterised with Be Vietnam Pro, so the watch never
-depends on a system font being able to render Vietnamese diacritics.
+Vietnamese labels are rasterised with Lora (OFL) and the clock uses DSEG7
+Classic Bold (OFL), so the watch never depends on a system font being able to
+render Vietnamese diacritics or seven-segment digits.
 """
 from __future__ import annotations
 
@@ -80,17 +81,29 @@ def chamfer_polygon(x: int, y: int, w: int, h: int, cut: int = 6) -> list[tuple[
 
 def draw_panel(draw: ImageDraw.ImageDraw, panel: dict) -> None:
     accent = hex_rgb(COLORS[panel["accent"]])
-    border = mix(hex_rgb(COLORS["cyan"]), hex_rgb(COLORS["bg"]), 0.78)
-    fill = (2, 8, 13, 235)
-    points = chamfer_polygon(panel["x"], panel["y"], panel["w"], panel["h"])
+    border = hex_rgb(COLORS["brass_dark"])
+    inner = hex_rgb(COLORS["brass"])
+    fill = hex_rgb(COLORS["panel"]) + (238,)
+    x, y, w, h = panel["x"], panel["y"], panel["w"], panel["h"]
+    points = chamfer_polygon(x, y, w, h)
     draw.polygon(points, fill=fill, outline=border + (255,))
-    x, y, w = panel["x"], panel["y"], panel["w"]
-    draw.line([(sc(x + 8), sc(y)), (sc(x + 28), sc(y))], fill=accent + (210,), width=sc(1))
-    draw.line([(sc(x + w - 18), sc(y + panel["h"])), (sc(x + w), sc(y + panel["h"]))], fill=accent + (110,), width=sc(1))
-    # corner ticks
-    tick = 4
-    draw.line([(sc(x), sc(y + 7)), (sc(x), sc(y + 7 + tick))], fill=accent + (255,), width=sc(1))
-    draw.line([(sc(x + w - 7 - tick), sc(y + panel["h"])), (sc(x + w - 7), sc(y + panel["h"]))], fill=accent + (255,), width=sc(1))
+    inset = chamfer_polygon(x + 3, y + 3, w - 6, h - 6, cut=4)
+    draw.line(inset + [inset[0]], fill=inner + (65,), width=sc(1))
+    # brass rail at the top and a short accent at the bottom-right
+    draw.line([(sc(x + 8), sc(y + 0.7)), (sc(x + 28), sc(y + 0.7))], fill=accent + (220,), width=sc(1.2))
+    draw.line([(sc(x + w - 18), sc(y + h - 0.7)), (sc(x + w - 1), sc(y + h - 0.7))], fill=accent + (135,), width=sc(1))
+    # corner screws
+    for px, py in ((x + 5, y + 5), (x + w - 5, y + 5), (x + 5, y + h - 5), (x + w - 5, y + h - 5)):
+        draw.ellipse(
+            [sc(px - 1.3), sc(py - 1.3), sc(px + 1.3), sc(py + 1.3)],
+            fill=inner + (215,),
+            outline=border + (255,),
+            width=1,
+        )
+    # three gauge ticks at the upper right
+    for i in range(3):
+        tx = x + w - 14 + i * 4
+        draw.line([(sc(tx), sc(y + 5)), (sc(tx), sc(y + 8))], fill=accent + (95,), width=sc(0.6))
 
 
 def draw_icon(draw: ImageDraw.ImageDraw, icon: dict) -> None:
@@ -135,63 +148,174 @@ def draw_icon(draw: ImageDraw.ImageDraw, icon: dict) -> None:
         draw.line([(sc(x + w * 0.5), sc(y + h * 0.25)), (sc(x + w * 0.5), sc(y + h * 0.66))], fill=colour, width=width)
 
 
-def build_background() -> Image.Image:
-    image = Image.new("RGBA", (sc(W), sc(H)), (0, 0, 0, 255))
-    draw = ImageDraw.Draw(image, "RGBA")
-    cyan = hex_rgb(COLORS["cyan"])
-    blue = hex_rgb(COLORS["blue"])
-    muted = hex_rgb(COLORS["muted"])
-    orange = hex_rgb(COLORS["orange"])
+def gear_points(cx: float, cy: float, outer: float, inner: float, teeth: int) -> list[tuple[int, int]]:
+    points = []
+    for i in range(teeth):
+        base = 2 * math.pi * i / teeth
+        for frac, radius in ((0.0, inner), (0.12, outer), (0.38, outer), (0.5, inner)):
+            angle = base + frac * 2 * math.pi / teeth
+            points.append((sc(cx + math.cos(angle) * radius), sc(cy + math.sin(angle) * radius)))
+    return points
 
-    # faint dot grid
-    for gy in range(14, H - 8, 16):
-        for gx in range(12, W - 8, 16):
-            draw.point((sc(gx), sc(gy)), fill=blue + (26,))
 
-    # circuit traces (deliberately low contrast so readings stay dominant)
-    traces = [
-        [(0, 74), (22, 74), (34, 86), (34, 120)],
-        [(0, 300), (20, 300), (30, 290), (30, 258)],
-        [(320, 96), (304, 96), (292, 84), (292, 58)],
-        [(320, 286), (302, 286), (290, 298), (290, 350)],
-        [(0, 180), (10, 180), (18, 188)],
-        [(320, 210), (310, 210), (302, 202)],
-    ]
-    for trace in traces:
-        draw.line([(sc(px), sc(py)) for px, py in trace], fill=blue + (55,), width=sc(1))
-        ex, ey = trace[-1]
-        draw.ellipse([sc(ex - 1.5), sc(ey - 1.5), sc(ex + 1.5), sc(ey + 1.5)], outline=cyan + (65,), width=sc(1))
-
-    # top rule (the bottom rule is intentionally omitted: the goal label sits
-    # below the ring and must not share the same scanline as a decoration)
-    draw.line([(sc(10), sc(48)), (sc(W - 10), sc(48))], fill=blue + (85,), width=sc(1))
-    draw.line([(sc(10), sc(48)), (sc(64), sc(48))], fill=orange + (200,), width=sc(1))
-
-    # The display has an 82 px corner radius.  L-shaped brackets at the old
-    # 8 px inset were outside the visible area on the real watch, so the HUD
-    # frame is now carried by the panels and the rounded edges themselves.
-    # Keep the tick ruler inside the corner arcs.
-    for ty in range(58, H - 28, 24):
-        draw.line([(sc(14), sc(ty)), (sc(17), sc(ty))], fill=muted + (70,), width=sc(1))
-        draw.line([(sc(W - 17), sc(ty + 12)), (sc(W - 14), sc(ty + 12))], fill=muted + (70,), width=sc(1))
-
-    # soft cyan glow behind the clock
-    glow, gdraw = new_layer(W, 150)
-    gdraw.ellipse([sc(18), sc(58), sc(W - 18), sc(142)], fill=cyan + (46,))
-    glow = glow.filter(ImageFilter.GaussianBlur(sc(22)))
-    image.alpha_composite(glow)
-
-    # clock colon (two chamfered blocks)
-    for cy in (78, 112):
-        gdraw = ImageDraw.Draw(image, "RGBA")
-        gdraw.polygon(
-            [(sc(156), sc(cy)), (sc(164), sc(cy)), (sc(166), sc(cy + 4)), (sc(166), sc(cy + 10)), (sc(164), sc(cy + 14)), (sc(156), sc(cy + 14)), (sc(154), sc(cy + 10)), (sc(154), sc(cy + 4))],
-            fill=cyan + (235,),
+def draw_gear(
+    draw: ImageDraw.ImageDraw,
+    cx: float,
+    cy: float,
+    outer: float,
+    inner: float,
+    teeth: int,
+    colour: tuple[int, int, int],
+    fill_alpha: int = 10,
+    outline_alpha: int = 55,
+) -> None:
+    points = gear_points(cx, cy, outer, inner, teeth)
+    draw.polygon(points, fill=colour + (fill_alpha,))
+    draw.line(points + [points[0]], fill=colour + (outline_alpha,), width=sc(1))
+    draw.ellipse(
+        [sc(cx - inner * 0.58), sc(cy - inner * 0.58), sc(cx + inner * 0.58), sc(cy + inner * 0.58)],
+        outline=colour + (outline_alpha,),
+        width=sc(1),
+    )
+    for i in range(6):
+        angle = 2 * math.pi * i / 6
+        draw.line(
+            [
+                (sc(cx + math.cos(angle) * inner * 0.6), sc(cy + math.sin(angle) * inner * 0.6)),
+                (sc(cx + math.cos(angle) * inner * 0.92), sc(cy + math.sin(angle) * inner * 0.92)),
+            ],
+            fill=colour + (max(20, outline_alpha // 3),),
+            width=sc(0.7),
         )
 
-    # underline under the clock
-    draw.line([(sc(34), sc(148)), (sc(148), sc(148))], fill=cyan + (110,), width=sc(1))
-    draw.line([(sc(172), sc(148)), (sc(286), sc(148))], fill=cyan + (110,), width=sc(1))
+
+def draw_rivet(draw: ImageDraw.ImageDraw, cx: float, cy: float, radius: float = 1.3) -> None:
+    brass = hex_rgb(COLORS["brass"])
+    dark = hex_rgb(COLORS["brass_dark"])
+    draw.ellipse(
+        [sc(cx - radius), sc(cy - radius), sc(cx + radius), sc(cy + radius)],
+        fill=brass + (220,),
+        outline=dark + (255,),
+        width=1,
+    )
+
+
+def draw_pipe(draw: ImageDraw.ImageDraw, points: list[tuple[float, float]], colour: tuple[int, int, int], width: float) -> None:
+    coords = [(sc(px), sc(py)) for px, py in points]
+    draw.line(coords, fill=colour + (95,), width=sc(width + 1.4), joint="curve")
+    draw.line(coords, fill=colour + (45,), width=sc(width), joint="curve")
+
+
+def draw_clock_frame(draw: ImageDraw.ImageDraw) -> None:
+    x, y, w, h = 10, 52, 300, 96
+    panel = hex_rgb(COLORS["panel"])
+    border = hex_rgb(COLORS["brass_dark"])
+    brass = hex_rgb(COLORS["brass"])
+    # dark leather clock window with a brass bezel
+    draw.rounded_rectangle(
+        [sc(x - 1), sc(y - 1), sc(x + w + 1), sc(y + h + 1)],
+        radius=sc(9),
+        fill=(0, 0, 0, 120),
+    )
+    draw.rounded_rectangle(
+        [sc(x), sc(y), sc(x + w), sc(y + h)],
+        radius=sc(8),
+        fill=panel + (240,),
+        outline=border + (255,),
+        width=sc(2),
+    )
+    draw.rounded_rectangle(
+        [sc(x + 4), sc(y + 4), sc(x + w - 4), sc(y + h - 4)],
+        radius=sc(5),
+        outline=brass + (65,),
+        width=sc(1),
+    )
+    for px, py in ((x + 9, y + 9), (x + w - 9, y + 9), (x + 9, y + h - 9), (x + w - 9, y + h - 9)):
+        draw_rivet(draw, px, py)
+    draw.line([(sc(x + 20), sc(y)), (sc(x + w - 20), sc(y))], fill=brass + (110,), width=sc(1))
+    draw.line([(sc(x + 20), sc(y + h)), (sc(x + w - 20), sc(y + h))], fill=brass + (110,), width=sc(1))
+
+
+def build_background() -> Image.Image:
+    image = Image.new("RGBA", (sc(W), sc(H)), hex_rgb(COLORS["bg"]) + (255,))
+    draw = ImageDraw.Draw(image, "RGBA")
+    bg = hex_rgb(COLORS["bg"])
+    bg2 = hex_rgb(COLORS["bg2"])
+    brass = hex_rgb(COLORS["brass"])
+    copper = hex_rgb(COLORS["copper"])
+    amber = hex_rgb(COLORS["amber"])
+    muted = hex_rgb(COLORS["muted"])
+
+    # warm gunmetal/leather gradient
+    for yy in range(sc(H)):
+        t = yy / max(1, sc(H) - 1)
+        colour = mix(bg, bg2, min(1.0, abs(t - 0.5) * 1.45))
+        draw.line([(0, yy), (sc(W), yy)], fill=colour + (255,))
+
+    # very faint leather grain and dust
+    for gx in range(0, W, 6):
+        offset = round(3 * math.sin(gx * 0.27))
+        draw.line([(sc(gx), 0), (sc(gx + offset), sc(H))], fill=brass + (6,), width=sc(0.5))
+    for gy in range(5, H, 11):
+        draw.line([(0, sc(gy)), (sc(W), sc(gy))], fill=brass + (3,), width=sc(0.4))
+    for gy in range(7, H, 17):
+        for gx in range(5, W, 19):
+            if (gx * 17 + gy * 31) % 53 < 10:
+                draw.point((sc(gx), sc(gy)), fill=brass + (12,))
+
+    # large, low-contrast brass gears behind the interface
+    draw_gear(draw, 4, 16, 104, 78, 18, brass, fill_alpha=10, outline_alpha=55)
+    draw_gear(draw, 318, 374, 92, 68, 15, copper, fill_alpha=8, outline_alpha=45)
+
+    # copper steam pipes at the sides
+    draw_pipe(draw, [(2, 98), (16, 98), (24, 106), (24, 146)], copper, 1.3)
+    draw_pipe(draw, [(318, 248), (304, 248), (296, 256), (296, 318)], brass, 1.2)
+
+    # brass top rail with rivets
+    draw.line([(sc(10), sc(48)), (sc(W - 10), sc(48))], fill=hex_rgb(COLORS["brass_dark"]) + (210,), width=sc(1.6))
+    draw.line([(sc(10), sc(48)), (sc(66), sc(48))], fill=copper + (230,), width=sc(1.6))
+    draw_rivet(draw, 16, 48, 1.1)
+    draw_rivet(draw, W - 16, 48, 1.1)
+
+    # side gauge ticks, kept outside the clock bezel and inside the 82 px corners
+    for ty in range(58, 300, 24):
+        draw.line([(sc(6), sc(ty)), (sc(9), sc(ty))], fill=brass + (85,), width=sc(1))
+        draw.line([(sc(W - 9), sc(ty + 12)), (sc(W - 6), sc(ty + 12))], fill=brass + (85,), width=sc(1))
+
+    draw_clock_frame(draw)
+
+    # amber lamp glow inside the clock window
+    glow, gdraw = new_layer(W, 150)
+    gdraw.ellipse([sc(24), sc(58), sc(W - 24), sc(142)], fill=amber + (40,))
+    glow = glow.filter(ImageFilter.GaussianBlur(sc(20)))
+    image.alpha_composite(glow)
+
+    # brass-rimmed amber colon lenses
+    for cy in (78, 112):
+        draw.ellipse(
+            [sc(154), sc(cy - 1), sc(166), sc(cy + 13)],
+            fill=hex_rgb(COLORS["brass_dark"]) + (255,),
+            outline=brass + (255,),
+            width=sc(1),
+        )
+        draw.ellipse([sc(157), sc(cy + 2), sc(163), sc(cy + 10)], fill=amber + (255,))
+
+    # brass rails under the clock
+    draw.line([(sc(34), sc(148)), (sc(148), sc(148))], fill=brass + (120,), width=sc(1))
+    draw.line([(sc(172), sc(148)), (sc(286), sc(148))], fill=brass + (120,), width=sc(1))
+
+    # gear surround for the centred goal ring
+    draw_gear(draw, 160, 302, 48, 40, 14, brass, fill_alpha=8, outline_alpha=65)
+    draw.ellipse(
+        [sc(160 - 45), sc(302 - 45), sc(160 + 45), sc(302 + 45)],
+        outline=brass + (45,),
+        width=sc(1),
+    )
+
+    # base rail beneath the goal label
+    draw.line([(sc(128), sc(370)), (sc(192), sc(370))], fill=hex_rgb(COLORS["brass_dark"]) + (160,), width=sc(1))
+    draw_rivet(draw, 122, 370, 1.1)
+    draw_rivet(draw, 198, 370, 1.1)
 
     # panels
     for panel in LAYOUT["panels"]:
@@ -203,15 +327,11 @@ def build_background() -> Image.Image:
 
     # labels
     for label in LAYOUT["labels"]:
-        font = load_font(LAYOUT, label["font"], label["size"], weight=700 if label["font"] == "display" else None)
+        font = load_font(LAYOUT, label["font"], label["size"], weight=label.get("weight", 700))
         colour = rgba(LAYOUT, label["color"])
         draw_text(draw, (label["x"], label["y"]), label["text"], font, colour, label.get("tracking", 0.0), label.get("anchor", "la"))
 
-    # The old circular tick ruler sat 6 px below the dial (cy 306 instead of
-    # 300) and its lower ticks crossed the "MỤC TIÊU" label. The dial bitmaps
-    # already provide the scale, so the extra ruler is removed.
-
-    final = Image.new("RGBA", CANVAS, (0, 0, 0, 255))
+    final = Image.new("RGBA", CANVAS, hex_rgb(COLORS["bg"]) + (255,))
     final.alpha_composite(downsample(image, CANVAS))
     return final
 
@@ -225,6 +345,7 @@ def render_glyph(
     glow_colour: tuple[int, int, int] | None = None,
     weight: int | None = None,
     padding: float = 1.5,
+    vertical: str = "center",
 ) -> Image.Image:
     w, h = size
     layer, draw = new_layer(w, h)
@@ -239,7 +360,13 @@ def render_glyph(
         bbox = draw.textbbox((0, 0), char, font=font, anchor="lt")
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x = (sc(w) - tw) / 2 - bbox[0]
-    y = (sc(h) - th) / 2 - bbox[1]
+    if vertical == "baseline":
+        # Seven-segment digits such as 1/4 have shorter ink than 0/8.  Align
+        # their bottoms instead of centring each glyph so the clock sits on
+        # one baseline like a real segmented display.
+        y = sc(h - padding) - bbox[3]
+    else:
+        y = (sc(h) - th) / 2 - bbox[1]
     if glow_colour:
         mask = Image.new("L", layer.size, 0)
         mdraw = ImageDraw.Draw(mask)
@@ -259,10 +386,11 @@ def common_font_size(
 ) -> int:
     """Choose one font size for every glyph in a digit set.
 
-    Be Vietnam Pro is proportional: "1" is much narrower than "0". Fitting
-    each glyph independently made "1" fill the cell height while "0" and "8"
-    were scaled down by width, so the clock looked uneven. A shared size keeps
-    cap heights and baselines identical.
+    Lora is proportional: "1" is much narrower than "0". Fitting each glyph
+    independently made "1" fill the cell height while "0" and "8" were scaled
+    down by width, so the numbers looked uneven. A shared size keeps cap
+    heights and baselines identical. DSEG7 also shares one size; its shorter
+    1/4 glyphs are bottom-aligned later by ``render_glyph``.
     """
     draw = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
     font = load_font(LAYOUT, family, font_size, weight=weight)
@@ -280,17 +408,27 @@ def common_font_size(
 def build_digits() -> dict[str, list[Path]]:
     created: dict[str, list[Path]] = {}
     specs = {
-        "digit_time": ((64, 88), "display", 92, 700, rgba(LAYOUT, "text"), hex_rgb(COLORS["cyan"]), 3.0),
-        "digit_metric": ((14, 24), "display", 24, 700, rgba(LAYOUT, "text"), None, 1.0),
-        "digit_small": ((10, 20), "label", 17, 600, rgba(LAYOUT, "text"), None, 0.5),
-        "digit_batt": ((10, 18), "label", 14, 600, rgba(LAYOUT, "cyan"), None, 0.5),
-        "digit_pct": ((12, 18), "label", 14, 600, rgba(LAYOUT, "cyan"), None, 0.5),
+        "digit_time": ((64, 88), "clock", 96, 400, rgba(LAYOUT, "amber"), hex_rgb(COLORS["copper"]), 2.0),
+        "digit_metric": ((14, 24), "display", 24, 700, rgba(LAYOUT, "cream"), None, 1.0),
+        "digit_small": ((10, 20), "label", 17, 600, rgba(LAYOUT, "cream"), None, 0.5),
+        "digit_batt": ((10, 18), "label", 14, 600, rgba(LAYOUT, "brass"), None, 0.5),
+        "digit_pct": ((12, 18), "label", 14, 600, rgba(LAYOUT, "amber"), None, 0.5),
     }
     for prefix, (size, family, font_size, weight, fill, glow, padding) in specs.items():
         shared_size = common_font_size(size, family, font_size, weight, padding)
         paths = []
         for digit in range(10):
-            image = render_glyph(str(digit), size, family, shared_size, fill, glow_colour=glow, weight=weight, padding=padding)
+            image = render_glyph(
+                str(digit),
+                size,
+                family,
+                shared_size,
+                fill,
+                glow_colour=glow,
+                weight=weight,
+                padding=padding,
+                vertical="baseline" if prefix == "digit_time" else "center",
+            )
             path = SRC_IMAGES / f"{prefix}_{digit}.png"
             save_png(image, path)
             paths.append(path)
@@ -304,14 +442,21 @@ def build_digits() -> dict[str, list[Path]]:
     return created
 
 
-def fit_font(family: str, text: str, size: int, max_width: float, tracking: float = 0.0):
+def fit_font(
+    family: str,
+    text: str,
+    size: int,
+    max_width: float,
+    tracking: float = 0.0,
+    weight: int | None = None,
+):
     while size > 5:
-        font = load_font(LAYOUT, family, size)
+        font = load_font(LAYOUT, family, size, weight=weight)
         width = sum(font.getlength(ch) for ch in text) + tracking * SS * (len(text) - 1)
         if width <= max_width * SS:
             return font
         size -= 1
-    return load_font(LAYOUT, family, 5)
+    return load_font(LAYOUT, family, 5, weight=weight)
 
 
 def build_weekdays() -> list[Path]:
@@ -319,7 +464,7 @@ def build_weekdays() -> list[Path]:
     paths = []
     for index, name in enumerate(META["weekdays"]):
         layer, draw = new_layer(110, 26)
-        font = fit_font("label", name, 18, 106, 0.2)
+        font = fit_font("label", name, 18, 106, 0.2, weight=700)
         # Leave room above the capital-line for Vietnamese diacritics.  The
         # old y=1 top-aligned each glyph and made accented letters sink.
         draw_text(draw, (2, 6), name, font, rgba(LAYOUT, "text"), 0.2, "la")
@@ -335,23 +480,24 @@ def build_rings() -> list[Path]:
     for pct in range(0, 101, 5):
         layer, draw = new_layer(*size)
         box = [sc(6), sc(6), sc(82), sc(82)]
-        track = mix(hex_rgb(COLORS["cyan"]), hex_rgb(COLORS["bg"]), 0.82)
-        draw.arc(box, 0, 359, fill=track + (255,), width=sc(6))
-        inner = mix(hex_rgb(COLORS["cyan"]), hex_rgb(COLORS["bg"]), 0.72)
+        track = mix(hex_rgb(COLORS["brass"]), hex_rgb(COLORS["bg"]), 0.82)
+        draw.arc(box, 0, 359, fill=track + (255,), width=sc(5))
+        inner = mix(hex_rgb(COLORS["brass"]), hex_rgb(COLORS["bg"]), 0.72)
         draw.arc([sc(15), sc(15), sc(73), sc(73)], 0, 359, fill=inner + (110,), width=sc(1))
+        draw.arc([sc(2), sc(2), sc(86), sc(86)], 0, 359, fill=hex_rgb(COLORS["brass"]) + (75,), width=sc(1))
         if pct > 0:
-            cyan = hex_rgb(COLORS["cyan"])
+            amber = hex_rgb(COLORS["amber"])
             end = -90 + 360 * pct / 100
-            draw.arc(box, -90, end if pct < 100 else 269.9, fill=cyan + (255,), width=sc(6))
+            draw.arc(box, -90, end if pct < 100 else 269.9, fill=amber + (255,), width=sc(5))
             # rounded caps
             for angle in (-90, end if pct < 100 else 269.9):
                 t = math.radians(angle)
                 px, py = 44 + math.cos(t) * 38, 44 + math.sin(t) * 38
-                draw.ellipse([sc(px - 3), sc(py - 3), sc(px + 3), sc(py + 3)], fill=cyan + (255,))
+                draw.ellipse([sc(px - 2.6), sc(py - 2.6), sc(px + 2.6), sc(py + 2.6)], fill=amber + (255,))
             mask = Image.new("L", layer.size, 0)
             mdraw = ImageDraw.Draw(mask)
-            mdraw.arc(box, -90, end if pct < 100 else 269.9, fill=255, width=sc(6))
-            add_glow(layer, mask, hex_rgb(COLORS["cyan"]) + (255,), 2.8, strength=150)
+            mdraw.arc(box, -90, end if pct < 100 else 269.9, fill=255, width=sc(5))
+            add_glow(layer, mask, hex_rgb(COLORS["amber"]) + (255,), 2.8, strength=150)
         path = SRC_IMAGES / f"ring_{pct:02d}.png"
         save_png(downsample(layer, size), path)
         paths.append(path)
@@ -410,7 +556,7 @@ def build_captioned_preview(raw: Image.Image) -> Image.Image:
     out.paste(watch, (0, margin_top), mask)
 
     # thin HUD frame follows the rounded display edge
-    frame = hex_rgb(COLORS["cyan"]) + (90,)
+    frame = hex_rgb(COLORS["brass"]) + (110,)
     draw.rounded_rectangle(
         [0, margin_top, width - 1, margin_top + H * scale - 1],
         radius=radius,
@@ -434,7 +580,7 @@ def build_captioned_preview(raw: Image.Image) -> Image.Image:
         (width / 2, margin_top + H * scale + 32),
         "Redmi Watch 5 Active · 320×385 · Tech HUD VI",
         font=small,
-        fill=hex_rgb(COLORS["cyan"]) + (210,),
+        fill=hex_rgb(COLORS["brass"]) + (220,),
         anchor="ma",
     )
     return out

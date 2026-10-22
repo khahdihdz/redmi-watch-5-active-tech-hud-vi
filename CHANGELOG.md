@@ -2,6 +2,20 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.1.0] — 2026-10-22
+
+### Thay đổi
+
+- Thiết kế lại theo phong cách **steampunk / brass**: nền da/gunmetal, khung đồng hồ brass, bánh răng, đinh tán, ống dẫn và panel viền đồng.
+- Đồng hồ `HH:MM` dùng **DSEG7 Classic Bold** bảy đoạn màu amber; các số 1/4 được căn đáy chung với 0/8 thay vì căn giữa.
+- Nhãn và số liệu dùng **Lora** serif (OFL) thay Be Vietnam Pro; validator vẫn kiểm tra đủ glyph tiếng Việt.
+- Giữ bốn panel dữ liệu, vòng **MỤC TIÊU** căn giữa và vùng an toàn bo góc **82 px**.
+- Thêm giấy phép Lora/DSEG7, cập nhật validator, test baseline bảy đoạn và tài liệu font.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.0.4] — 2026-10-22
 
 ### Sửa lỗi

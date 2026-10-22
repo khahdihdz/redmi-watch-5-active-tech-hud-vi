@@ -92,7 +92,7 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
     table = "\n".join(f"| `{name}` | `{digest}` |" for name, digest in checksums)
     files = "\n".join(f"- `{name}`" for name, _ in checksums)
     files += "\n- `SHA256SUMS.txt`"
-    text = f"""# Redmi Watch 5 Active Tech HUD VI {version}
+    text = f"""# Redmi Watch 5 Active Tech HUD VI: Brass {version}
 
 - **Phiên bản:** {version}
 - **Ngày phát hành:** {today}
@@ -102,9 +102,11 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 
 ## Thay đổi
 
-- Giao diện Tech HUD tiếng Việt có dấu, tối ưu màn hình 320×385.
-- Toàn bộ nhãn và chữ số dùng **Be Vietnam Pro**; bộ số 0–9 dùng chung một cỡ chữ để cao bằng nhau.
-- Chữ trong cùng một dòng dùng chung baseline; dấu tiếng Việt nằm phía trên, không còn ký tự nhô lên/thụt xuống.
+- Giao diện **steampunk / brass** tiếng Việt có dấu, tối ưu màn hình 320×385.
+- Đồng hồ `HH:MM` dùng **DSEG7 Classic Bold** bảy đoạn màu amber trong khung đồng có đinh tán.
+- Nhãn và số liệu dùng **Lora** serif (OFL); Lora có đủ glyph tiếng Việt, DSEG7 chỉ dùng cho chữ số giờ:phút.
+- Các số bảy đoạn `1`/`4` được căn đáy chung với `0`/`8`, không bị lệch dòng.
+- Nền da/gunmetal, bánh răng đồng, ống dẫn, panel viền brass và vòng MỤC TIÊU kiểu mặt số.
 - Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL, panel trạng thái và chấm trạng thái trùng.
 - Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
 - Bốn panel dữ liệu: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.
@@ -172,7 +174,8 @@ sha256sum -c SHA256SUMS.txt
 
 ## Giấy phép
 
-Mã nguồn và thiết kế: MIT. Font Be Vietnam Pro: SIL Open Font License 1.1.
+Mã nguồn và thiết kế: MIT. Font **Lora** và **DSEG7 Classic**: SIL Open Font License 1.1.
+Be Vietnam Pro và Orbitron còn trong source để tham khảo nhưng không còn được dùng để render từ v1.1.0.
 Compiler `compile.exe` là công cụ bên thứ ba, **không** được phân phối trong repo hay release.
 """
     target.write_text(text, encoding="utf-8")
@@ -182,10 +185,12 @@ def write_build_info(version: str, prerelease: bool, record: dict, binary: Path 
     layout = load_layout()
     meta = layout["meta"]
     lines = [
-        "REDMI WATCH 5 ACTIVE — TECH HUD VI",
-        "==================================",
+        "REDMI WATCH 5 ACTIVE — TECH HUD VI: BRASS",
+        "==========================================",
         f"Phiên bản:             {version}",
         f"Kênh:                  {'pre-release' if prerelease else 'stable'}",
+        f"Phong cách:            Steampunk / brass",
+        f"Font:                  DSEG7 (giờ:phút), Lora (nhãn/số liệu)",
         f"Thiết bị:              {meta['device']} (DeviceType {meta['device_type']})",
         f"Độ phân giải:          {meta['canvas']['w']}x{meta['canvas']['h']}",
         f"Thời điểm đóng gói:    {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC",

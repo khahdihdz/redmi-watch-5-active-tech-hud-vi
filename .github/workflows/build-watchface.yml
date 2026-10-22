@@ -12,7 +12,7 @@ on:
         type: boolean
         default: false
       version:
-        description: "Tag phiên bản đã tồn tại (bắt buộc khi release=true), ví dụ v1.0.4"
+        description: "Tag phiên bản đã tồn tại (bắt buộc khi release=true), ví dụ v1.1.0"
         type: string
         required: false
         default: ""
@@ -55,7 +55,7 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             echo "VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
           else
-            echo "VERSION=v1.0.4-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+            echo "VERSION=v1.1.0-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
           fi
 
       - name: Install pinned dependencies
@@ -273,7 +273,7 @@ jobs:
             "dist/BUILD-INFO.txt" \
             --repo "${GITHUB_REPOSITORY}" \
             --verify-tag \
-            --title "Redmi Watch 5 Active Tech HUD VI ${TAG}" \
+            --title "Redmi Watch 5 Active Tech HUD VI: Brass ${TAG}" \
             --notes-file dist/release-notes.md \
             "${FLAGS[@]}"
 

@@ -1,8 +1,8 @@
 {
   "meta": {
-    "name": "Tech HUD VI",
+    "name": "Tech HUD VI — Brass",
     "title": "Tech HUD VI",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "device": "Redmi Watch 5 Active",
     "device_type": "3651",
     "canvas": {
@@ -22,20 +22,25 @@
       "THỨ BẢY"
     ],
     "colors": {
-      "bg": "#000000",
-      "cyan": "#00D9FF",
-      "blue": "#087EFF",
-      "orange": "#FF6B00",
-      "red": "#FF3158",
-      "green": "#32E69B",
-      "text": "#F5FAFF",
-      "muted": "#7FA7CC"
+      "bg": "#0B0806",
+      "bg2": "#1B120B",
+      "panel": "#17100B",
+      "brass": "#C99A4B",
+      "brass_dark": "#6B4A23",
+      "copper": "#B4633B",
+      "amber": "#FFB24A",
+      "cream": "#F2E2C2",
+      "text": "#F2E2C2",
+      "muted": "#A88A5E",
+      "patina": "#4F8B78",
+      "red": "#C45A45"
     },
     "fonts": {
-      "display": "assets/fonts/BeVietnamPro-Bold.ttf",
-      "label": "assets/fonts/BeVietnamPro-Bold.ttf",
-      "label_medium": "assets/fonts/BeVietnamPro-SemiBold.ttf",
-      "label_regular": "assets/fonts/BeVietnamPro-Regular.ttf"
+      "clock": "assets/fonts/DSEG7Classic-Bold.ttf",
+      "display": "assets/fonts/Lora-Variable.ttf",
+      "label": "assets/fonts/Lora-Variable.ttf",
+      "label_medium": "assets/fonts/Lora-Variable.ttf",
+      "label_regular": "assets/fonts/Lora-Variable.ttf"
     },
     "sample": {
       "weekday": 3,
@@ -66,9 +71,10 @@
       "y": 8,
       "font": "label",
       "size": 9,
-      "color": "cyan",
+      "color": "brass",
       "tracking": 1.2,
-      "max_width": 100
+      "max_width": 100,
+      "weight": 700
     },
     {
       "id": "battery_pct",
@@ -77,18 +83,20 @@
       "y": 8,
       "font": "label",
       "size": 9,
-      "color": "cyan",
-      "max_width": 8
+      "color": "brass",
+      "max_width": 8,
+      "weight": 700
     },
     {
       "id": "date_sep",
       "text": "/",
-      "x": 262,
+      "x": 261,
       "y": 26,
       "font": "label",
       "size": 14,
       "color": "muted",
-      "max_width": 8
+      "max_width": 11,
+      "weight": 500
     },
     {
       "id": "step_label",
@@ -99,7 +107,8 @@
       "size": 9,
       "color": "muted",
       "tracking": 0.8,
-      "max_width": 60
+      "max_width": 60,
+      "weight": 700
     },
     {
       "id": "heart_label",
@@ -110,7 +119,8 @@
       "size": 9,
       "color": "muted",
       "tracking": 0.8,
-      "max_width": 40
+      "max_width": 40,
+      "weight": 700
     },
     {
       "id": "calo_label",
@@ -121,7 +131,8 @@
       "size": 9,
       "color": "muted",
       "tracking": 0.8,
-      "max_width": 60
+      "max_width": 60,
+      "weight": 700
     },
     {
       "id": "temp_label",
@@ -132,7 +143,8 @@
       "size": 9,
       "color": "muted",
       "tracking": 0.6,
-      "max_width": 66
+      "max_width": 66,
+      "weight": 700
     },
     {
       "id": "temp_unit",
@@ -142,7 +154,8 @@
       "font": "label_medium",
       "size": 8,
       "color": "muted",
-      "max_width": 16
+      "max_width": 16,
+      "weight": 600
     },
     {
       "id": "goal_label",
@@ -151,10 +164,11 @@
       "y": 354,
       "font": "label",
       "size": 8,
-      "color": "muted",
+      "color": "brass",
       "tracking": 0.8,
       "anchor": "ma",
-      "max_width": 86
+      "max_width": 86,
+      "weight": 700
     }
   ],
   "panels": [
@@ -164,7 +178,7 @@
       "y": 156,
       "w": 146,
       "h": 46,
-      "accent": "cyan"
+      "accent": "brass"
     },
     {
       "id": "heart",
@@ -172,7 +186,7 @@
       "y": 156,
       "w": 146,
       "h": 46,
-      "accent": "red"
+      "accent": "copper"
     },
     {
       "id": "calories",
@@ -180,7 +194,7 @@
       "y": 208,
       "w": 146,
       "h": 46,
-      "accent": "orange"
+      "accent": "amber"
     },
     {
       "id": "temp",
@@ -188,7 +202,7 @@
       "y": 208,
       "w": 146,
       "h": 46,
-      "accent": "blue"
+      "accent": "patina"
     }
   ],
   "icons": [
@@ -199,7 +213,7 @@
       "y": 8,
       "w": 20,
       "h": 12,
-      "color": "cyan"
+      "color": "brass"
     },
     {
       "id": "steps",
@@ -208,7 +222,7 @@
       "y": 162,
       "w": 11,
       "h": 11,
-      "color": "cyan"
+      "color": "brass"
     },
     {
       "id": "heart",
@@ -226,7 +240,7 @@
       "y": 214,
       "w": 11,
       "h": 11,
-      "color": "orange"
+      "color": "copper"
     },
     {
       "id": "temp",
@@ -235,7 +249,7 @@
       "y": 214,
       "w": 11,
       "h": 11,
-      "color": "blue"
+      "color": "patina"
     }
   ],
   "widgets": [

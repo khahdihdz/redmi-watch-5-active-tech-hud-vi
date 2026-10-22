@@ -105,9 +105,11 @@ def write_build_info(info: dict) -> Path:
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     path = DIST_DIR / "BUILD-INFO.txt"
     lines = [
-        "REDMI WATCH 5 ACTIVE — TECH HUD VI",
-        "==================================",
+        "REDMI WATCH 5 ACTIVE — TECH HUD VI: BRASS",
+        "==========================================",
         f"Phiên bản:            {info['version']}",
+        f"Phong cách:           Steampunk / brass",
+        f"Font:                 DSEG7 (giờ:phút), Lora (nhãn/số liệu)",
         f"Thiết bị:             {info['device']} (DeviceType {info['device_type']})",
         f"Độ phân giải:         {info['canvas']}",
         f"Định dạng:            Gen2 .bin (magic 5AA53412)",

@@ -30,7 +30,10 @@ def test_package_contains_source_and_preview():
         names = zf.namelist()
     assert any(name.endswith("design/layout.json") for name in names)
     assert any(name.endswith("src/watchface/tech_hud_vi.fprj") for name in names)
-    assert any(name.endswith("assets/fonts/BeVietnamPro-Bold.ttf") for name in names)
+    assert any(name.endswith("assets/fonts/Lora-Variable.ttf") for name in names)
+    assert any(name.endswith("assets/fonts/DSEG7Classic-Bold.ttf") for name in names)
+    assert any(name.endswith("assets/fonts/OFL-Lora.txt") for name in names)
+    assert any(name.endswith("assets/fonts/OFL-DSEG.txt") for name in names)
     assert not any("__pycache__" in name for name in names)
     assert "redmi-watch-5-active-tech-hud-vi-preview.png" in checksums.read_text(encoding="utf-8")
 

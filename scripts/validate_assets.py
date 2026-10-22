@@ -78,14 +78,18 @@ def main() -> int:
         cmap = load_font_cmap(ROOT / meta["fonts"][font_name])
         missing = {ch for ch in required_chars if ord(ch) not in cmap}
         check(not missing, f"{font_name} misses glyphs: {''.join(sorted(missing))}")
-    check("BeVietnamPro" in meta["fonts"]["display"], "display font is not Be Vietnam Pro")
+    check("Lora" in meta["fonts"]["display"], "display font is not Lora")
+    check("Lora" in meta["fonts"]["label"], "label font is not Lora")
+    check("DSEG7" in meta["fonts"]["clock"], "clock font is not DSEG7")
     display_cmap = load_font_cmap(ROOT / meta["fonts"]["display"])
     check(all(ord(str(d)) in display_cmap for d in range(10)), "display font misses digits")
+    clock_cmap = load_font_cmap(ROOT / meta["fonts"]["clock"])
+    check(all(ord(str(d)) in clock_cmap for d in range(10)), "clock font misses digits")
 
     # ---- static label fit and contrast ------------------------------------------------
     label_boxes: list[tuple[str, float, float, float, float]] = []
     for label in layout["labels"]:
-        font = load_font(layout, label["font"], label["size"], weight=700 if label["font"] == "display" else None)
+        font = load_font(layout, label["font"], label["size"], weight=label.get("weight", 700))
         width = text_width(font, label["text"], label.get("tracking", 0.0)) / 4  # SS
         anchor = label.get("anchor", "la")
         x = label["x"]
