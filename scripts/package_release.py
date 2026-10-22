@@ -104,6 +104,7 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 
 - Giao diện Tech HUD tiếng Việt có dấu, tối ưu màn hình 320×385.
 - Toàn bộ nhãn và chữ số dùng **Be Vietnam Pro**; bộ số 0–9 dùng chung một cỡ chữ để cao bằng nhau.
+- Chữ trong cùng một dòng dùng chung baseline; dấu tiếng Việt nằm phía trên, không còn ký tự nhô lên/thụt xuống.
 - Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL, panel trạng thái và chấm trạng thái trùng.
 - Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
 - Bốn panel dữ liệu: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.

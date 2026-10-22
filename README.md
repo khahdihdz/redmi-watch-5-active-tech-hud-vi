@@ -17,6 +17,7 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 - Bố cục tối giản: chỉ giữ dữ liệu cần thiết, không footer tên máy, không mã phiên bản, không nhãn đơn vị lặp, không panel trạng thái.
 - Nội dung được căn vào vùng an toàn của màn hình bo góc bán kính **82 px**; không đặt chữ/số sát bốn góc.
 - Toàn bộ nhãn và chữ số được **rasterize thành bitmap** bằng font **Be Vietnam Pro**, nên không phụ thuộc font hệ thống của đồng hồ và không mất dấu.
+- Chữ trong cùng một dòng dùng chung **baseline**; dấu tiếng Việt nằm phía trên nên thân chữ không bị nhô lên/thụt xuống.
 - Dữ liệu động lấy từ các source đã được tài liệu hoá cho đúng mẫu máy.
 - Build, kiểm tra, đóng gói và phát hành tự động bằng GitHub Actions.
 
@@ -119,7 +120,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.0.3
+python3 scripts/package_release.py --version v1.0.4
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -189,8 +190,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.0.3
-git push origin v1.0.3
+git tag v1.0.4
+git push origin v1.0.4
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.

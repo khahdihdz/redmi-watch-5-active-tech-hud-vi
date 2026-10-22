@@ -320,7 +320,9 @@ def build_weekdays() -> list[Path]:
     for index, name in enumerate(META["weekdays"]):
         layer, draw = new_layer(110, 26)
         font = fit_font("label", name, 18, 106, 0.2)
-        draw_text(draw, (2, 1), name, font, rgba(LAYOUT, "text"), 0.2, "la")
+        # Leave room above the capital-line for Vietnamese diacritics.  The
+        # old y=1 top-aligned each glyph and made accented letters sink.
+        draw_text(draw, (2, 6), name, font, rgba(LAYOUT, "text"), 0.2, "la")
         path = SRC_IMAGES / f"weekday_{index}.png"
         save_png(downsample(layer, (110, 26)), path)
         paths.append(path)

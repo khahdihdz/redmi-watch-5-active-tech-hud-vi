@@ -2,12 +2,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from common import parse_number  # noqa: E402
+from common import draw_text, load_font, load_layout, parse_number  # noqa: E402
+
+LAYOUT = load_layout()
 
 
 def test_digit_sets_share_one_height():
@@ -25,6 +27,30 @@ def test_zero_value_keeps_one_digit():
     assert parse_number(0, 6) == [None, None, None, None, None, "0"]
     assert parse_number(0, 1) == ["0"]
     assert parse_number(8642, 6) == [None, None, "8", "6", "4", "2"]
+
+
+def test_text_keeps_one_baseline():
+    font = load_font(LAYOUT, "label", 12)
+    layer = Image.new("RGBA", (200 * 4, 40 * 4), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer, "RGBA")
+    text = "THỨ"
+    draw_text(draw, (2, 10), text, font, (255, 255, 255, 255), 0.0, "la")
+
+    x = 2 * 4
+    bottoms = []
+    for char in text:
+        advance = font.getlength(char)
+        cell = layer.crop((round(x), 0, round(x + advance), layer.height)).getchannel("A")
+        bbox = cell.getbbox()
+        if bbox:
+            bottoms.append(bbox[3])
+        x += advance
+
+    assert len(bottoms) >= 2
+    # The old per-glyph "lt" anchor produced a ~10 px difference between
+    # plain and accented letters at this size.  A shared baseline is within
+    # antialiasing tolerance.
+    assert max(bottoms) - min(bottoms) <= 2
 
 
 def run(script: str) -> subprocess.CompletedProcess:

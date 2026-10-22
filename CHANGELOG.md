@@ -2,6 +2,19 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.0.4] — 2026-10-22
+
+### Sửa lỗi
+
+- Sửa lỗi chữ trên cùng một dòng bị nhô lên/thụt xuống: mọi ký tự giờ dùng chung **baseline** thay vì căn theo đỉnh của từng glyph.
+- Dấu tiếng Việt (Ứ, Ư, Ớ, Ệ, Ộ…) mở rộng phía trên dòng; thân chữ thẳng hàng với chữ không dấu.
+- Dời chữ thứ xuống trong khung 110×26 để dấu không bị cắt; làm lại nhãn trên nền và toàn bộ ảnh thứ.
+- Thêm test hồi quy kiểm tra baseline của chữ có dấu.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.0.3] — 2026-10-22
 
 ### Thay đổi

@@ -112,14 +112,24 @@ def draw_text(
     tracking: float = 0.0,
     anchor: str = "la",
 ):
-    """Draw text with optional letter-spacing. Coordinates are 1x design pixels."""
+    """Draw text with optional letter-spacing on one shared baseline.
+
+    Coordinates are 1x design pixels.  ``y`` is the top of capital letters,
+    not the top of each individual glyph: drawing every character with
+    ``anchor="lt"`` made accented Vietnamese letters sit lower than plain
+    letters on the same line.  The baseline is derived from the font's "H"
+    cap height and every glyph is anchored with ``ls`` so its body shares
+    exactly that baseline.  Diacritics extend above ``y`` naturally.
+    """
     x, y = xy[0] * SS, xy[1] * SS
     step = tracking * SS
     total = text_width(font, text, tracking)
     if anchor in ("ra", "ma"):
         x -= total if anchor == "ra" else total / 2
+    cap_height = -font.getbbox("H", anchor="ls")[1]
+    baseline = y + cap_height
     for index, char in enumerate(text):
-        draw.text((x, y), char, font=font, fill=fill, anchor="lt")
+        draw.text((x, baseline), char, font=font, fill=fill, anchor="ls")
         x += font.getlength(char) + step
 
 
