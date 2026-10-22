@@ -193,8 +193,25 @@ def load_font_cmap(path: Path) -> set[int]:
     return result
 
 
-def parse_number(value: int, digits: int, blanking: bool = True) -> list[str | None]:
-    raw = str(max(0, int(value))).rjust(digits, "0")
+def parse_number(
+    value: int,
+    digits: int,
+    blanking: bool = True,
+    signed: bool = False,
+) -> list[str | None]:
+    value = int(value)
+    if signed and value < 0:
+        # Temperature can legitimately fall below zero. Keep the minus sign
+        # in its own cell so the existing `_minus` bitmap can render it.
+        magnitude = str(-value)
+        allowed = max(0, digits - 1)
+        if len(magnitude) > allowed:
+            magnitude = magnitude[-allowed:] if allowed else ""
+        if not blanking:
+            return ["-"] + list(magnitude.rjust(allowed, "0"))
+        chars = ["-"] + list(magnitude)
+        return [None] * (digits - len(chars)) + chars
+    raw = str(max(0, value)).rjust(digits, "0")
     if len(raw) > digits:
         raw = raw[-digits:]
     if not blanking:

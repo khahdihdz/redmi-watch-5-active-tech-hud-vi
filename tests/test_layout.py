@@ -99,6 +99,7 @@ def test_metric_fields_have_room_for_large_values():
     assert widgets["steps"]["digits"] >= 6
     assert widgets["calories"]["digits"] >= 5
     assert widgets["temp"]["digits"] >= 3
+    assert widgets["temp"].get("signed") is True
     assert widgets["battery"]["digits"] >= 3
 
 

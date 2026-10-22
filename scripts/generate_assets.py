@@ -475,13 +475,19 @@ def compose_widget(canvas: Image.Image, widget: dict, sample: dict, assets: dict
         return
     value = widget.get("preview", "0")
     digits = widget["digits"]
-    chars = parse_number(int(value), digits, bool(widget.get("blanking", 1)))
+    chars = parse_number(
+        int(value),
+        digits,
+        bool(widget.get("blanking", 1)),
+        bool(widget.get("signed", False)),
+    )
     cell_w = assets[f"{widget['image']}_0"].width
     spacing = widget.get("spacing", 0)
     for index, char in enumerate(chars):
         if char is None:
             continue
-        img = assets[f"{widget['image']}_{int(char)}"]
+        suffix = "minus" if char == "-" else str(int(char))
+        img = assets[f"{widget['image']}_{suffix}"]
         canvas.alpha_composite(img, (widget["x"] + index * (cell_w + spacing), widget["y"]))
 
 

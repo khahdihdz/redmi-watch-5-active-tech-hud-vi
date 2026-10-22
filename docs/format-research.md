@@ -48,7 +48,7 @@ Kiểm chứng bằng cách giải mã assembly `XiaomiWatch.Common` nhúng tron
 - `SetupImageList` gọi `BitmapList.Split('|')` rồi `s.Split(':')[1]` cho mọi widget `Shape="31"`. Vì vậy **mỗi entry của image list bắt buộc có tiền tố `(giá_trị):`**, nếu thiếu compiler ném `Index was outside the bounds of the array`.
 - `RedmiWatch5ActiveCompressor` giới hạn **256 màu RGBA** cho mỗi ảnh; vượt quá sẽ báo `Colors count is more than 256 pcs`.
 - Bộ nén tạo buffer đầu ra bằng đúng kích thước dữ liệu đã pad `(width + 1) × height`. Với ảnh nhỏ hơn 256 byte sau pad, nhánh `StartingSmallData` ghi thêm header và làm tràn buffer (`Destination array was not long enough`). Vì vậy mọi bitmap được pad thêm hàng trong suốt cho tới khi `(width + 1) × height ≥ 256`.
-- Widget số dùng ảnh index 0–9; ảnh thứ 11 là dấu trừ cho giá trị âm (ví dụ nhiệt độ), đúng quy ước của Mi Create.
+- Widget số dùng ảnh index 0–9; ảnh thứ 11 là dấu trừ cho giá trị âm (ví dụ nhiệt độ), đúng quy ước của Mi Create. Preview v1.1.2 render dấu trừ trong ô riêng cho `-5`, `-10`, `-20`.
 
 Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_compiler_limits`) và `scripts/generate_assets.py`, rồi kiểm tra lại bằng `scripts/validate_assets.py` trước khi biên dịch.
 
@@ -62,7 +62,7 @@ Các ràng buộc này được cài đặt trong `scripts/common.py` (`fit_comp
 - Be Vietnam Pro và Orbitron không còn được dùng để render kể từ v1.1.0.
 - Preview và fprj dùng cùng một bộ bitmap, nên không có sai lệch giữa ảnh xem trước và mặt đồng hồ.
 - Màn hình có bán kính bo góc **82 px**. `validate_assets.py` kiểm tra bốn góc của mọi panel, icon, widget và nhãn nằm trong hình chữ nhật bo góc; preview cũng được mask theo đúng bán kính này.
-- Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU, giá trị phần trăm và source `1021` đã được bỏ từ v1.1.1. Bốn panel dữ liệu được xếp thành bốn dải brass full-width.
+- Panel/nhãn trạng thái và bitmap kết nối đã được bỏ từ v1.0.3; vòng MỤC TIÊU, giá trị phần trăm và source `1021` đã được bỏ từ v1.1.1. Bốn panel dữ liệu được xếp thành bốn dải brass full-width; v1.1.2 căn thẳng hàng nội dung và hỗ trợ nhiệt độ âm.
 - Từ v1.0.4, `draw_text()` vẽ từng ký tự bằng anchor `ls` trên một baseline chung (lấy từ cap height của `H`). Trước đó anchor `lt` căn theo đỉnh từng glyph nên chữ có dấu tiếng Việt bị tụt xuống so với chữ không dấu.
 
 ## 5. Dữ liệu

@@ -70,7 +70,7 @@ Danh sách data source cho `redmi_watch_5_active` trong Mi Create **không có**
 | Bước | `0821` | |
 | Nhịp tim | `0822` | |
 | Calo | `0823` | |
-| Nhiệt độ | `2031` | do ứng dụng điện thoại cung cấp |
+| Nhiệt độ | `2031` | do ứng dụng điện thoại cung cấp; hỗ trợ giá trị âm |
 
 Không có dữ liệu nào được sinh ngẫu nhiên hay gán cứng trong mặt đồng hồ.
 
@@ -95,7 +95,7 @@ Lưu ý:
 - Nếu đồng hồ khởi động lại khi chọn mặt: nó quay về mặt mặc định, không mất dữ liệu. Hãy xoá mặt đó và báo lỗi.
 - **Gadgetbridge** hiện không cài được mặt `.bin` cho mẫu này.
 - Không có cách cài từ iPhone.
-- Nhiệt độ phụ thuộc ứng dụng đang kết nối (Notify), không phải cảm biến trên đồng hồ.
+- Nhiệt độ phụ thuộc ứng dụng đang kết nối (Notify), không phải cảm biến trên đồng hồ; giá trị dưới `0°C` hiển thị dấu trừ.
 
 ### Quay về mặt mặc định
 
@@ -123,7 +123,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.1.1
+python3 scripts/package_release.py --version v1.1.2
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -193,8 +193,8 @@ Artifact của pull request **không** kèm binary.
 
 ```bash
 # Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.1.1
-git push origin v1.1.1
+git tag v1.1.2
+git push origin v1.1.2
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.
@@ -253,7 +253,7 @@ grep tech-hud-vi.bin SHA256SUMS.txt
 - **Chưa kiểm thử trên thiết bị thật.** Đây là giới hạn quan trọng nhất.
 - Không có AOD.
 - Không có quãng đường KM (không có source được tài liệu hoá).
-- Nhiệt độ có thể trống nếu ứng dụng điện thoại chưa đồng bộ thời tiết.
+- Nhiệt độ có thể trống nếu ứng dụng điện thoại chưa đồng bộ thời tiết; nhiệt độ âm hiển thị bằng ô dấu trừ.
 - Chưa đo mức hao pin và khả năng đọc ngoài trời trên máy thật.
 - Một số máy có thể báo “Not enough space” nếu đã có mặt tuỳ chỉnh khác.
 - Compiler đóng; hành vi có thể thay đổi nếu dùng phiên bản khác. Luôn dùng đúng SHA-256 đã pin.

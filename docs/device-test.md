@@ -14,7 +14,7 @@ Repo chỉ cho phép phát hành **stable** khi `tests/device_verification.json`
    - Thứ/ngày/tháng đúng, không mất dấu tiếng Việt.
    - Pin phần trăm khớp với cài đặt hệ thống.
    - Bước, nhịp tim, calo cập nhật khi vận động.
-   - Nhiệt độ hiển thị sau khi đồng bộ thời tiết.
+   - Nhiệt độ hiển thị sau khi đồng bộ thời tiết; thử cả giá trị âm nếu có thể.
    - Bốn dải `BƯỚC / TIM / CALO / NHIỆT ĐỘ` nằm gọn, không chồng lên nhau.
    - Không bị cắt chữ, không tràn panel, không nhấp nháy.
 5. Theo dõi pin ít nhất 24 giờ.

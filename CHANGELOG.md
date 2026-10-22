@@ -2,6 +2,19 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.1.2] — 2026-10-22
+
+### Thay đổi
+
+- Căn thẳng hàng nhãn, icon và giá trị số trong bốn dải dữ liệu; đơn vị `°C` được canh giữa theo chiều dọc với giá trị nhiệt độ.
+- Hỗ trợ nhiệt độ âm thực tế (`-5`, `-10`, `-20`) bằng ô dấu trừ thay vì kẹp giá trị về `0`.
+- Giữ nguyên việc bỏ **MỤC TIÊU**, source `1021` và bốn dải brass full-width từ v1.1.1.
+- Thêm test cho số âm và thuộc tính `signed` của widget nhiệt độ.
+
+### Giới hạn
+
+- Vẫn là **pre-release** vì chưa kiểm thử trên Redmi Watch 5 Active thật.
+
 ## [v1.1.1] — 2026-10-22
 
 ### Thay đổi

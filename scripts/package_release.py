@@ -110,6 +110,7 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 - Bố cục tối giản: bỏ footer tên thiết bị, mã phiên bản, nhãn PIN, đơn vị BPM/KCAL, panel trạng thái và chấm trạng thái trùng.
 - Tên thứ đầy đủ (CHỦ NHẬT … THỨ BẢY), ngày dạng `21/10`.
 - Bốn dải dữ liệu full-width: BƯỚC, TIM, CALO, NHIỆT ĐỘ; vùng số rộng hơn để không tràn.
+- Nhiệt độ 3 chữ số, hỗ trợ giá trị âm (`-5`, `-10`, `-20`); đơn vị `°C` canh giữa theo chiều dọc với giá trị.
 - Bỏ hoàn toàn vòng MỤC TIÊU, giá trị phần trăm và source `1021`; không còn cụm bánh răng/thanh đế phía dưới.
 - Toàn bộ nội dung nằm trong vùng an toàn của màn hình bo góc bán kính 82 px; không đặt chữ/số sát bốn góc.
 - Build tự động, kiểm tra cấu trúc nhị phân, checksum SHA-256 và GitHub Actions.
@@ -156,7 +157,7 @@ Ghi chú kiểm thử thiết bị: `{record.get('reason', record.get('notes', '
 
 - Chỉ dành cho **Redmi Watch 5 Active** (DeviceType 3651). Không dùng cho Redmi Watch 5, 5 Lite hay mẫu khác.
 - Không có ô **KM**: định dạng của mẫu này không công bố nguồn quãng đường; dự án không bịa dữ liệu.
-- Nhiệt độ lấy từ thời tiết do ứng dụng điện thoại cung cấp; có thể trống nếu chưa đồng bộ.
+- Nhiệt độ lấy từ thời tiết do ứng dụng điện thoại cung cấp; có thể trống nếu chưa đồng bộ. Giá trị âm dùng ô dấu trừ.
 - Không có AOD trong phiên bản này.
 - Chưa xác minh hiển thị thực tế ngoài trời hoặc hao pin.
 
@@ -199,7 +200,7 @@ def write_build_info(version: str, prerelease: bool, record: dict, binary: Path 
         f"Kiểm thử thiết bị:     {'ĐÃ XÁC NHẬN' if record.get('verified') else 'CHƯA THỰC HIỆN'}",
         "",
         "Thành phần:",
-        "- tech-hud-vi-preview.png : ảnh xem trước, số liệu minh họa",
+        f"- {ARTIFACT}-preview.png : ảnh xem trước, số liệu minh họa",
         f"- {ARTIFACT}-source.zip : toàn bộ mã nguồn, asset, font, test và workflow",
         "- SHA256SUMS.txt : checksum của mọi tệp phát hành",
         "- BUILD-INFO.txt : thông tin build này",

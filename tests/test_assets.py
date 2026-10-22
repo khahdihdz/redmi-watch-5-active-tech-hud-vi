@@ -39,6 +39,13 @@ def test_zero_value_keeps_one_digit():
     assert parse_number(8642, 6) == [None, None, "8", "6", "4", "2"]
 
 
+def test_signed_temperature_uses_minus_cell():
+    assert parse_number(28, 3, signed=True) == [None, "2", "8"]
+    assert parse_number(-5, 3, signed=True) == [None, "-", "5"]
+    assert parse_number(-10, 3, signed=True) == ["-", "1", "0"]
+    assert parse_number(-123, 3, signed=True) == ["-", "2", "3"]
+
+
 def test_text_keeps_one_baseline():
     font = load_font(LAYOUT, "label", 12)
     layer = Image.new("RGBA", (200 * 4, 40 * 4), (0, 0, 0, 0))
