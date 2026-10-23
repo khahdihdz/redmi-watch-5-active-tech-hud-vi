@@ -7,7 +7,7 @@ from PIL import Image, ImageChops, ImageDraw
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from common import draw_text, load_font, load_layout, parse_number  # noqa: E402
+from common import draw_text, fit_compiler_limits, load_font, load_layout, parse_number  # noqa: E402
 
 LAYOUT = load_layout()
 
@@ -86,15 +86,40 @@ def test_assets_and_vietnamese_glyphs():
     assert "Vietnamese glyph coverage complete" in result.stdout
 
 
-def test_watch_preview_is_the_safe_background():
+def test_watch_background_uses_verified_dither_encoding():
+    """Freeze the hardware-safe background encoding.
+
+    v1.1.3 shipped the background quantised without dithering; the watch
+    rebooted as soon as the face was selected.  Re-encoding the same artwork
+    to 64 colours with Floyd-Steinberg dithering was confirmed working on a
+    real Redmi Watch 5 Active.  This test fails if a later change silently
+    reverts to the no-dither encoding that rebooted the watch.
+    """
+    background = Image.open(ROOT / "src" / "watchface" / "images" / "background.png").convert("RGBA")
+    assert background.size == (320, 385)
+    colours = background.getcolors(maxcolors=257)
+    assert colours is not None and len(colours) <= 64, "compiled background must use at most 64 colours"
+
+    full_art = Image.open(ROOT / "assets" / "backgrounds" / "background.png").convert("RGBA")
+    unsafe = fit_compiler_limits(full_art).convert("RGB")
+    # Compare RGB, not RGBA: Image.getbbox() only looks at the alpha channel,
+    # which is fully opaque here and would hide every pixel difference.
+    assert ImageChops.difference(background.convert("RGB"), unsafe).getbbox() is not None, (
+        "compiled background matches the no-dither encoding that rebooted v1.1.3"
+    )
+
+
+def test_watch_preview_is_the_composite():
     background = Image.open(ROOT / "src" / "watchface" / "images" / "background.png").convert("RGBA")
     for path in (
         ROOT / "src" / "watchface" / "preview.png",
         ROOT / "src" / "watchface" / "images" / "preview.png",
     ):
         preview = Image.open(path).convert("RGBA")
-        difference = ImageChops.difference(preview, background).getbbox()
-        assert difference is None, f"{path} must match the safe background bitmap"
+        assert preview.size == (320, 385)
+        assert (
+            ImageChops.difference(preview.convert("RGB"), background.convert("RGB")).getbbox() is not None
+        ), f"{path} must be the composite preview, not the bare background"
 
 
 def test_generation_is_deterministic():

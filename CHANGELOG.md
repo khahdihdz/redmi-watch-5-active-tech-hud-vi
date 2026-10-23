@@ -2,6 +2,31 @@
 
 Mọi thay đổi đáng chú ý được ghi ở đây. Định dạng theo [Semantic Versioning](https://semver.org/lang/vi/).
 
+## [v1.1.5] — 2026-10-23
+
+### Sửa lỗi
+
+- **Sửa lỗi đồng hồ reboot khi chọn mặt.** Nguyên nhân là **cách nén ảnh nền v1.1.3**, không phải toạ độ hay ảnh preview. Cùng thiết kế nhưng luồng nén đó làm firmware reboot.
+- Nền được lượng tử lại thành 64 màu kèm **dither Floyd–Steinberg** để đổi luồng nén. Cấu hình này đã chạy ổn trên Redmi Watch 5 Active thật (chẩn đoán G và H).
+- Ảnh thu nhỏ trong danh sách chọn mặt trở lại là **ảnh tổng hợp đầy đủ** (H đã chạy), thay vì background tĩnh của v1.1.4.
+- Thêm test khoá cách mã hoá nền an toàn, để một thay đổi sau này không vô tình quay lại bản nén gây reboot.
+
+### Ghi chú
+
+- Toạ độ, bố cục, font, dữ liệu nguồn giữ nguyên như v1.1.3.
+- **Không cài v1.1.4**: bản đó reboot khi chọn mặt.
+- Vẫn là **pre-release** cho tới khi bản CI v1.1.5 được cài và xác nhận trên thiết bị.
+
+## [v1.1.4] — 2026-10-22
+
+### Thay đổi
+
+- Dùng background tĩnh làm ảnh preview nội bộ để né reboot sau khi chẩn đoán sai rằng ảnh preview tổng hợp là nguyên nhân.
+
+### Giới hạn
+
+- **Bản này reboot khi chọn mặt.** Cách sửa dựa trên nguyên nhân sai; lỗi thật nằm ở cách nén ảnh nền và chỉ được sửa ở v1.1.5. Không cài.
+
 ## [v1.1.3] — 2026-10-22
 
 ### Thay đổi

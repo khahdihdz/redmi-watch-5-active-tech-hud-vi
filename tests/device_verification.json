@@ -5,5 +5,5 @@
   "firmware": null,
   "date": null,
   "tester": null,
-  "notes": "Đã chạy chẩn đoán trên thiết bị thật với các binary vá: toạ độ widget v1.1.3 an toàn, background v1.1.3 an toàn, preview tổng hợp v1.1.3 gây reboot khi mở danh sách chọn mặt. Cấu hình v1.1.4 dùng background làm preview nội bộ (diag-E) cũng đã chạy. Bản tech-hud-vi.bin v1.1.4 build từ CI vẫn cần được cài và xác nhận kèm ảnh chụp cùng phiên bản firmware trước khi chuyển kênh stable."
+  "notes": "Chẩn đoán trên thiết bị thật đã xác định nguyên nhân reboot của v1.1.3/v1.1.4: cách nén ảnh nền, không phải toạ độ hay preview. Các bản chẩn đoán nền đã lượng tử lại kèm dither (G và H) đều chạy ổn; v1.1.2/control/A2 cũng chạy. v1.1.5 dùng đúng cấu hình của H. Vẫn cần cài bản tech-hud-vi.bin v1.1.5 build từ CI, xác nhận kèm ảnh chụp và phiên bản firmware trước khi chuyển kênh stable."
 }

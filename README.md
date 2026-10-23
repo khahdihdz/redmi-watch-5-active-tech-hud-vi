@@ -6,7 +6,7 @@ Mặt đồng hồ tuỳ chỉnh phong cách **steampunk / brass**, giao diện 
 
 > Ảnh xem trước dùng **số liệu minh họa**. Trên đồng hồ, các giá trị lấy từ cảm biến và ứng dụng điện thoại đã kết nối.
 
-> **Ghi chú v1.1.4:** ảnh thu nhỏ trong danh sách chọn mặt trên đồng hồ dùng chính background tĩnh, không có số/chữ. Bản preview tổng hợp đầy đủ của v1.1.3 gây reboot trên thiết bị thật; ảnh xem trước phát hành (`design/preview.png`) vẫn hiển thị đầy đủ thiết kế.
+> **Ghi chú v1.1.5:** đã tìm ra nguyên nhân reboot thật sự. Không phải ảnh preview, mà là **cách nén ảnh nền v1.1.3**: cùng một thiết kế nhưng luồng nén đó làm firmware reboot khi chọn mặt. v1.1.5 vẫn giữ nguyên thiết kế nhưng lượng tử lại nền (64 màu, dither Floyd–Steinberg) để đổi luồng nén; cấu hình này đã chạy ổn trên Redmi Watch 5 Active thật (chẩn đoán G và H). Ảnh thu nhỏ trong danh sách chọn mặt là ảnh tổng hợp đầy đủ. **Không cài v1.1.4** — bản đó reboot.
 
 ---
 
@@ -52,10 +52,13 @@ Dự án tạo ra một mặt đồng hồ số thực thụ bằng compiler Gen
 | Compiler | Mi Create `compile.exe`, pin commit + SHA-256 |
 | Build on CI | GitHub Actions `windows-2022` |
 | Kiểm tra cấu trúc `.bin` | Có, tự động |
-| **Kiểm thử trên máy thật** | **Chẩn đoán đã chạy; bản phát hành v1.1.4 chưa xác nhận** |
-| Kênh phát hành | **Pre-release** cho tới khi có xác nhận thiết bị |
+| **Kiểm thử trên máy thật** | **Đã xác nhận cấu hình v1.1.5 trên máy thật; bản CI v1.1.5 chờ xác nhận lần cuối** |
+| Kênh phát hành | **Pre-release** cho tới khi có xác nhận bản CI trên thiết bị |
 
-> Các binary chẩn đoán đã được thử trên Redmi Watch 5 Active thật: toạ độ mới an toàn, background v1.1.3 an toàn, preview tổng hợp v1.1.3 gây reboot. Bản `tech-hud-vi.bin` v1.1.4 build từ CI vẫn cần được cài và xác nhận. Vì vậy release hiện tại là **pre-release**. Xem [docs/device-test.md](docs/device-test.md) để biết cách xác nhận.
+> Các binary chẩn đoán đã được thử trên Redmi Watch 5 Active thật. Kết quả: toạ độ mới an toàn, **nền v1.1.3 là nguyên nhân reboot**, preview tổng hợp v1.1.3 và preview v1.1.2 đều không phải nguyên nhân.
+> - `diag-G` (nền v1.1.3 lượng tử lại + preview v1.1.2): chạy.
+> - `diag-H` (nền v1.1.3 lượng tử lại + preview tổng hợp v1.1.3): chạy.
+> v1.1.5 dùng đúng cấu hình của H. Bản `tech-hud-vi.bin` build từ CI cần được cài và xác nhận thêm trước khi chuyển kênh stable. Xem [docs/device-test.md](docs/device-test.md).
 
 ### Vì sao không có ô KM?
 
@@ -125,7 +128,7 @@ python3 -m pytest -q
 ### Chỉ tạo preview và source package (không cần compiler)
 
 ```bash
-python3 scripts/package_release.py --version v1.1.4
+python3 scripts/package_release.py --version v1.1.5
 ```
 
 Kết quả nằm trong `dist/`. Khi không có compiler, **không** có `tech-hud-vi.bin`; script ghi rõ điều đó trong `BUILD-INFO.txt`.
@@ -194,9 +197,9 @@ Artifact của pull request **không** kèm binary.
 ### Phát hành
 
 ```bash
-# Tag phát hành (pre-release tự động vì chưa test thiết bị)
-git tag v1.1.4
-git push origin v1.1.4
+# Tag phát hành (pre-release tự động vì chưa xác nhận bản CI trên thiết bị)
+git tag v1.1.5
+git push origin v1.1.5
 ```
 
 Hoặc **Actions → build-watchface → Run workflow**, nhập tag đã tồn tại và chọn `release=true`.
@@ -252,7 +255,9 @@ grep tech-hud-vi.bin SHA256SUMS.txt
 
 ## 8. Giới hạn đã biết
 
-- **Chưa kiểm thử trên thiết bị thật.** Đây là giới hạn quan trọng nhất.
+- **Chưa có ảnh chụp/xác nhận đầy đủ cho bản CI phát hành**, dù cấu hình đã được xác nhận trên máy thật qua các bản chẩn đoán G/H. Đây là giới hạn quan trọng nhất.
+- **Không cài v1.1.4**: bản này reboot khi chọn mặt. Dùng v1.1.5 hoặc quay về v1.1.2.
+- Lỗi reboot của v1.1.3/v1.1.4 đến từ **cách nén ảnh nền**, không phải toạ độ hay preview. v1.1.5 lượng tử lại nền (64 màu, dither) để tránh lỗi firmware; không đổi thiết kế.
 - Không có AOD.
 - Không có quãng đường KM (không có source được tài liệu hoá).
 - Nhiệt độ có thể trống nếu ứng dụng điện thoại chưa đồng bộ thời tiết; nhiệt độ âm hiển thị bằng ô dấu trừ.

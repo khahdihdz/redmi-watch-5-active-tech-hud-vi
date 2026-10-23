@@ -330,6 +330,25 @@ def build_background() -> Image.Image:
     return final
 
 
+def compiler_safe_background(image: Image.Image) -> Image.Image:
+    """Return the background bitmap in the encoding verified on hardware.
+
+    The v1.1.3 background quantised without dithering produced a deflate
+    stream that made the watch reboot the moment the face was selected (the
+    bitmap itself decoded fine off-device).  The same artwork quantised to 64
+    colours with Floyd-Steinberg dithering produces a different stream and was
+    confirmed working on a real Redmi Watch 5 Active.  Keep this exact
+    encoding pinned to the diagnostic binaries G/H so an innocent refactor
+    cannot bring the reboot back.
+    """
+    safe = image.convert("RGB").quantize(
+        colors=64,
+        method=Image.Quantize.MEDIANCUT,
+        dither=Image.Dither.FLOYDSTEINBERG,
+    )
+    return safe.convert("RGBA")
+
+
 def render_glyph(
     char: str,
     size: tuple[int, int],
@@ -605,7 +624,7 @@ def main() -> int:
 
     background = build_background()
     save_png(background, BACKGROUND_PATH)
-    save_png(background, SRC_IMAGES / "background.png")
+    save_png(compiler_safe_background(background), SRC_IMAGES / "background.png")
 
     build_digits()
     build_weekdays()
@@ -614,15 +633,13 @@ def main() -> int:
     for path in sorted(SRC_IMAGES.glob("*.png")):
         assets[path.stem] = Image.open(path).convert("RGBA")
 
-    # The watch face preview is also parsed by the firmware's selection
-    # screen.  The v1.1.3 composite preview triggers a reboot on the target
-    # device, while the background bitmap is known safe.  Keep the full
-    # illustrative composite for the release image, but feed the background
-    # to the compiler as the on-watch selection thumbnail.
+    # The on-watch selection thumbnail is the full composite.  v1.1.3's
+    # composite preview was originally blamed for the reboot, but the real
+    # cause was the background encoding; once the background was re-encoded
+    # the composite preview was confirmed working on hardware (diagnostic H).
     full_preview = build_preview(background, assets)
-    watch_preview = background.copy()
-    save_png(watch_preview, PREVIEW_RAW_PATH)
-    save_png(watch_preview, SRC_IMAGES / "preview.png")
+    save_png(full_preview, PREVIEW_RAW_PATH)
+    save_png(full_preview, SRC_IMAGES / "preview.png")
     save_png(build_captioned_preview(full_preview), PREVIEW_PATH)
 
     fprj = build_fprj()

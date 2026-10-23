@@ -113,7 +113,8 @@ def write_notes(target: Path, version: str, prerelease: bool, record: dict, chec
 - Nhiệt độ 3 chữ số, hỗ trợ giá trị âm (`-5`, `-10`, `-20`); đơn vị `°C` canh giữa theo chiều dọc với giá trị.
 - Bỏ hoàn toàn vòng MỤC TIÊU, giá trị phần trăm và source `1021`; không còn cụm bánh răng/thanh đế phía dưới.
 - Toàn bộ nội dung nằm trong vùng an toàn của màn hình bo góc bán kính 82 px; không đặt chữ/số sát bốn góc.
-- Ảnh thu nhỏ trong danh sách chọn mặt dùng background tĩnh để tránh lỗi reboot của preview tổng hợp trên firmware hiện tại; ảnh xem trước phát hành vẫn hiển thị đầy đủ thiết kế.
+- Sửa lỗi đồng hồ **reboot khi chọn mặt**: nền được lượng tử lại thành 64 màu kèm dither Floyd-Steinberg để đổi luồng nén gây lỗi firmware, giữ nguyên thiết kế.
+- Ảnh thu nhỏ trong danh sách chọn mặt là **ảnh tổng hợp đầy đủ**; ảnh xem trước phát hành cũng hiển thị đầy đủ thiết kế.
 - Build tự động, kiểm tra cấu trúc nhị phân, checksum SHA-256 và GitHub Actions.
 
 ## Ảnh xem trước
@@ -156,6 +157,7 @@ Ghi chú kiểm thử thiết bị: `{record.get('reason', record.get('notes', '
 
 ## Giới hạn tương thích
 
+- **Không cài v1.1.4**: bản đó reboot khi chọn mặt. Dùng v1.1.5 hoặc quay về v1.1.2.
 - Chỉ dành cho **Redmi Watch 5 Active** (DeviceType 3651). Không dùng cho Redmi Watch 5, 5 Lite hay mẫu khác.
 - Không có ô **KM**: định dạng của mẫu này không công bố nguồn quãng đường; dự án không bịa dữ liệu.
 - Nhiệt độ lấy từ thời tiết do ứng dụng điện thoại cung cấp; có thể trống nếu chưa đồng bộ. Giá trị âm dùng ô dấu trừ.

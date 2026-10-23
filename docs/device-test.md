@@ -1,8 +1,15 @@
 # Kiểm thử trên thiết bị thật
 
-Trạng thái hiện tại: **CHƯA XÁC NHẬN BẢN PHÁT HÀNH**.
+Trạng thái hiện tại: **ĐÃ XÁC NHẬN CẤU HÌNH v1.1.5 TRÊN MÁY THẬT, CHỜ XÁC NHẬN BẢN CI**.
 
-Đã có bằng chứng chẩn đoán trên thiết bị thật cho các binary vá cục bộ: toạ độ v1.1.3 an toàn, background v1.1.3 an toàn, preview v1.1.3 gây reboot. Cấu hình v1.1.4 dùng background làm preview nội bộ cũng đã chạy trên thiết bị khi kiểm thử cục bộ (`diag-E`). Tuy nhiên bản `tech-hud-vi.bin` phát hành từ CI vẫn cần được cài và xác nhận lại trước khi chuyển kênh stable.
+Nguyên nhân reboot của v1.1.3/v1.1.4 đã được xác định trên thiết bị thật: **cách nén ảnh nền**, không phải toạ độ hay ảnh preview. Các binary chẩn đoán đã thử trên Redmi Watch 5 Active:
+
+- `diag-A` / `diag-control` (nền + preview v1.1.2, toạ độ v1.1.3): chạy.
+- `diag-G` (nền v1.1.3 lượng tử lại 64 màu + dither, preview v1.1.2): chạy.
+- `diag-H` (nền v1.1.3 lượng tử lại 64 màu + dither, preview tổng hợp v1.1.3): chạy.
+- `v1.1.3`, `v1.1.4`, `diag-E`, `diag-F`, `diag-C2` (đều chứa nền v1.1.3 nén không dither): reboot khi chọn mặt.
+
+v1.1.5 dùng đúng cấu hình của `diag-H`. Bản `tech-hud-vi.bin` phát hành từ CI cần được cài và xác nhận lại (kèm ảnh chụp và phiên bản firmware) trước khi chuyển kênh stable.
 
 Repo chỉ cho phép phát hành **stable** khi `tests/device_verification.json` có `"verified": true`. Đây là cổng bắt buộc, không phải gợi ý.
 
